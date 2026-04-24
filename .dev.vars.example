@@ -1,0 +1,3 @@
+# Cloudflare development environment variables (used by Wrangler and OpenNext)
+NEXTJS_ENV=development
+SESSION_SECRET=a_very_secret_key_for_development_only_at_least_32_chars
