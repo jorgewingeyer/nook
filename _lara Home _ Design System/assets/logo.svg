@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 60" fill="none">
+  
+  <g transform="translate(0, 6)">
+    
+    <path d="M6 46 L6 22 Q6 4 21 4 Q36 4 36 22 L36 46" stroke="#B8945F" stroke-width="2" stroke-linecap="round" fill="none"></path>
+    
+    <path d="M13 46 L13 24 Q13 12 21 12 Q29 12 29 24 L29 46" stroke="#B8945F" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.45"></path>
+    
+    <line x1="0" y1="46" x2="42" y2="46" stroke="#B8945F" stroke-width="1.8" stroke-linecap="round"></line>
+  </g>
+  
+  <text x="54" y="44" font-family="Cormorant Garamond, Georgia, serif" font-size="38" font-weight="400" letter-spacing="2" fill="#2E1F0E">nook</text>
+  
+  <circle cx="208" cy="44" r="2.5" fill="#B8945F" opacity="0.7"></circle>
+  <text x="216" y="44" font-family="Jost, Helvetica Neue, sans-serif" font-size="10" font-weight="500" letter-spacing="5" fill="#7A6A58">HOME</text>
+</svg>

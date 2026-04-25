@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nook — Exploración de Paletas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #18140F; font-family: 'Jost', sans-serif; -webkit-font-smoothing: antialiased; min-height: 100vh; padding: 40px 32px; }
+
+  h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 1.8rem; color: rgba(245,237,224,0.8); text-align: center; margin-bottom: 6px; letter-spacing: 0.02em; }
+  .subtitle { font-size: 11px; color: rgba(245,237,224,0.35); text-align: center; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 36px; }
+
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1280px; margin: 0 auto; }
+
+  .palette-card { border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; cursor: pointer; transition: transform 240ms ease, box-shadow 240ms ease; }
+  .palette-card:hover { transform: translateY(-4px); }
+
+  /* PALETTE SECTIONS */
+  .pal-hero { padding: 28px 24px 20px; position: relative; overflow: hidden; }
+  .pal-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 400; letter-spacing: 0.08em; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+  .pal-arch { display: inline-block; }
+  .pal-hero-heading { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; line-height: 1.25; margin-bottom: 14px; }
+  .pal-btn { display: inline-block; padding: 9px 22px; border-radius: 100px; font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer; }
+  .pal-label { font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 10px; opacity: 0.65; }
+
+  .pal-body { padding: 20px 24px; flex: 1; }
+
+  /* Product mini card */
+  .mini-card { border-radius: 12px; overflow: hidden; margin-bottom: 14px; }
+  .mini-img { height: 120px; position: relative; overflow: hidden; }
+  .mini-img img { width: 100%; height: 100%; object-fit: cover; }
+  .mini-info { padding: 10px 12px 12px; }
+  .mini-cat { font-size: 9px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 3px; }
+  .mini-name { font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; line-height: 1.3; margin-bottom: 6px; }
+  .mini-price { font-size: 14px; font-weight: 600; }
+
+  /* Swatches */
+  .swatches { display: flex; gap: 6px; }
+  .swatch { flex: 1; height: 28px; border-radius: 6px; }
+
+  .pal-tag { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: 500; letter-spacing: 0.06em; margin-top: 12px; }
+
+  /* Active indicator */
+  .active-badge { position: absolute; top: 14px; right: 14px; background: rgba(255,255,255,0.18); color: white; font-size: 9px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 100px; backdrop-filter: blur(8px); }
+</style>
+</head>
+<body>
+
+<h1>Exploración de Paletas</h1>
+<div class="subtitle">Nook · Cuatro propuestas de color · Elegí la que más te inspire</div>
+
+<div class="grid">
+
+  <!-- PALETA 1: DORADO CÁLIDO (actual) -->
+  <div class="palette-card" style="box-shadow: 0 8px 40px rgba(184,148,95,0.25)">
+    <div class="pal-hero" style="background: #F5EDE0; min-height: 180px;">
+      <div class="active-badge" style="background:rgba(184,148,95,0.25); color:#8A6B3D">✦ Actual</div>
+      <div class="pal-label" style="color:#7A6A58">Dorado Cálido</div>
+      <div class="pal-logo" style="color:#2E1F0E">
+        <svg width="22" height="26" viewBox="0 0 36 42" fill="none"><path d="M4 38 L4 18 Q4 4 18 4 Q32 4 32 18 L32 38" stroke="#B8945F" stroke-width="2" stroke-linecap="round"/><path d="M10 38 L10 20 Q10 10 18 10 Q26 10 26 20 L26 38" stroke="#B8945F" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/><line x1="0" y1="38" x2="36" y2="38" stroke="#B8945F" stroke-width="1.8" stroke-linecap="round"/></svg>
+        nook
+      </div>
+      <div class="pal-hero-heading" style="color:#2E1F0E">Tu rincón favorito <em style="color:#8A6B3D">empieza acá.</em></div>
+      <button class="pal-btn" style="background:#2E1F0E; color:#F5EDE0">Explorá</button>
+    </div>
+    <div class="pal-body" style="background:#FAF6F1">
+      <div class="mini-card" style="border:1px solid rgba(178,148,95,0.3)">
+        <div class="mini-img"><img src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&h=240&fit=crop&q=80" alt="lamp"></div>
+        <div class="mini-info" style="background:#FAF6F1">
+          <div class="mini-cat" style="color:#7A6A58">Iluminación</div>
+          <div class="mini-name" style="color:#2E1F0E">Lámpara Arco Dorada</div>
+          <div class="mini-price" style="color:#2E1F0E">$89.900</div>
+        </div>
+      </div>
+      <div class="swatches">
+        <div class="swatch" style="background:#F5EDE0; border:1px solid #E2C9A0"></div>
+        <div class="swatch" style="background:#D4AF7A"></div>
+        <div class="swatch" style="background:#B8945F"></div>
+        <div class="swatch" style="background:#2E1F0E"></div>
+        <div class="swatch" style="background:#7A6A58"></div>
+      </div>
+      <div class="pal-tag" style="border:1px solid rgba(184,148,95,0.4); color:#8A6B3D; background:transparent">Cálido · Elegante · Artesanal</div>
+    </div>
+  </div>
+
+  <!-- PALETA 2: TERRACOTA -->
+  <div class="palette-card" style="box-shadow: 0 8px 40px rgba(196,98,45,0.2)">
+    <div class="pal-hero" style="background:#FDF0E8; min-height:180px;">
+      <div class="pal-label" style="color:#A0614A">Terracota</div>
+      <div class="pal-logo" style="color:#2A1208">
+        <svg width="22" height="26" viewBox="0 0 36 42" fill="none"><path d="M4 38 L4 18 Q4 4 18 4 Q32 4 32 18 L32 38" stroke="#C4622D" stroke-width="2" stroke-linecap="round"/><path d="M10 38 L10 20 Q10 10 18 10 Q26 10 26 20 L26 38" stroke="#C4622D" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/><line x1="0" y1="38" x2="36" y2="38" stroke="#C4622D" stroke-width="1.8" stroke-linecap="round"/></svg>
+        nook
+      </div>
+      <div class="pal-hero-heading" style="color:#2A1208">Tu rincón favorito <em style="color:#9B3D14">empieza acá.</em></div>
+      <button class="pal-btn" style="background:#C4622D; color:white">Explorá</button>
+    </div>
+    <div class="pal-body" style="background:#FFF8F4">
+      <div class="mini-card" style="border:1px solid rgba(196,98,45,0.2)">
+        <div class="mini-img"><img src="https://images.unsplash.com/photo-1616047006789-b7af5afb8c20?w=400&h=240&fit=crop&q=80" alt="vase"></div>
+        <div class="mini-info" style="background:#FFF8F4">
+          <div class="mini-cat" style="color:#A0614A">Jarrones</div>
+          <div class="mini-name" style="color:#2A1208">Jarrón Terracota</div>
+          <div class="mini-price" style="color:#2A1208">$62.500</div>
+        </div>
+      </div>
+      <div class="swatches">
+        <div class="swatch" style="background:#FDF0E8; border:1px solid #F0CBBA"></div>
+        <div class="swatch" style="background:#E8957A"></div>
+        <div class="swatch" style="background:#C4622D"></div>
+        <div class="swatch" style="background:#2A1208"></div>
+        <div class="swatch" style="background:#8A5040"></div>
+      </div>
+      <div class="pal-tag" style="border:1px solid rgba(196,98,45,0.35); color:#9B3D14; background:transparent">Tierra · Vivo · Mediterráneo</div>
+    </div>
+  </div>
+
+  <!-- PALETA 3: VERDE SALVIA -->
+  <div class="palette-card" style="box-shadow: 0 8px 40px rgba(107,143,113,0.2)">
+    <div class="pal-hero" style="background:#EEF2EC; min-height:180px;">
+      <div class="pal-label" style="color:#5A7A5C">Verde Salvia</div>
+      <div class="pal-logo" style="color:#1A2D1C">
+        <svg width="22" height="26" viewBox="0 0 36 42" fill="none"><path d="M4 38 L4 18 Q4 4 18 4 Q32 4 32 18 L32 38" stroke="#6B8F71" stroke-width="2" stroke-linecap="round"/><path d="M10 38 L10 20 Q10 10 18 10 Q26 10 26 20 L26 38" stroke="#6B8F71" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/><line x1="0" y1="38" x2="36" y2="38" stroke="#6B8F71" stroke-width="1.8" stroke-linecap="round"/></svg>
+        nook
+      </div>
+      <div class="pal-hero-heading" style="color:#1A2D1C">Tu rincón favorito <em style="color:#3D6B41">empieza acá.</em></div>
+      <button class="pal-btn" style="background:#1A2D1C; color:#EEF2EC">Explorá</button>
+    </div>
+    <div class="pal-body" style="background:#F6FAF6">
+      <div class="mini-card" style="border:1px solid rgba(107,143,113,0.25)">
+        <div class="mini-img"><img src="https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&h=240&fit=crop&q=80" alt="candle"></div>
+        <div class="mini-info" style="background:#F6FAF6">
+          <div class="mini-cat" style="color:#5A7A5C">Velas</div>
+          <div class="mini-name" style="color:#1A2D1C">Vela Cedro & Eucalipto</div>
+          <div class="mini-price" style="color:#1A2D1C">$18.900</div>
+        </div>
+      </div>
+      <div class="swatches">
+        <div class="swatch" style="background:#EEF2EC; border:1px solid #C8D8C9"></div>
+        <div class="swatch" style="background:#9DBE9F"></div>
+        <div class="swatch" style="background:#6B8F71"></div>
+        <div class="swatch" style="background:#1A2D1C"></div>
+        <div class="swatch" style="background:#5A7A5C"></div>
+      </div>
+      <div class="pal-tag" style="border:1px solid rgba(107,143,113,0.4); color:#3D6B41; background:transparent">Natural · Fresco · Sereno</div>
+    </div>
+  </div>
+
+  <!-- PALETA 4: AZUL MEDIANOCHE -->
+  <div class="palette-card" style="box-shadow: 0 8px 40px rgba(27,43,75,0.35)">
+    <div class="pal-hero" style="background:#1B2B4B; min-height:180px;">
+      <div class="pal-label" style="color:#8FA8D4">Azul Medianoche</div>
+      <div class="pal-logo" style="color:#F0EDE6">
+        <svg width="22" height="26" viewBox="0 0 36 42" fill="none"><path d="M4 38 L4 18 Q4 4 18 4 Q32 4 32 18 L32 38" stroke="#C9A96E" stroke-width="2" stroke-linecap="round"/><path d="M10 38 L10 20 Q10 10 18 10 Q26 10 26 20 L26 38" stroke="#C9A96E" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/><line x1="0" y1="38" x2="36" y2="38" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round"/></svg>
+        nook
+      </div>
+      <div class="pal-hero-heading" style="color:#F0EDE6">Tu rincón favorito <em style="color:#C9A96E">empieza acá.</em></div>
+      <button class="pal-btn" style="background:#C9A96E; color:#1B2B4B">Explorá</button>
+    </div>
+    <div class="pal-body" style="background:#243453">
+      <div class="mini-card" style="border:1px solid rgba(201,169,110,0.25)">
+        <div class="mini-img"><img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400&h=240&fit=crop&q=80" alt="glasses"></div>
+        <div class="mini-info" style="background:#243453">
+          <div class="mini-cat" style="color:#8FA8D4">Copas</div>
+          <div class="mini-name" style="color:#F0EDE6">Copas Cristal Bohemia</div>
+          <div class="mini-price" style="color:#F0EDE6">$38.900</div>
+        </div>
+      </div>
+      <div class="swatches">
+        <div class="swatch" style="background:#F0EDE6"></div>
+        <div class="swatch" style="background:#8FA8D4"></div>
+        <div class="swatch" style="background:#C9A96E"></div>
+        <div class="swatch" style="background:#1B2B4B"></div>
+        <div class="swatch" style="background:#243453"></div>
+      </div>
+      <div class="pal-tag" style="border:1px solid rgba(201,169,110,0.3); color:#C9A96E; background:transparent">Sofisticado · Nocturno · Premium</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="text-align:center; margin-top:36px; font-size:11px; color:rgba(245,237,224,0.3); letter-spacing:0.1em; text-transform:uppercase;">
+  Decile cuál te gusta y lo aplicamos en todo el sistema →
+</div>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--parchment); padding: 24px; font-family: var(--font-body); }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .box { background: var(--warm-white); border-radius: var(--radius-md); height: 64px; display: flex; align-items: center; justify-content: center; }
+  .label { font-size: 9px; color: var(--warm-gray); text-align: center; margin-top: 6px; letter-spacing: 0.08em; }
+  .wrap { }
+  .section { font-size: 9px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 10px; }
+</style>
+</head>
+<body>
+  <div class="section">Elevation / Shadow System</div>
+  <div class="grid">
+    <div class="wrap">
+      <div class="box" style="box-shadow:0 1px 4px rgba(46,31,14,0.06)"></div>
+      <div class="label">XS — Subtle</div>
+    </div>
+    <div class="wrap">
+      <div class="box" style="box-shadow:0 2px 12px rgba(46,31,14,0.08)"></div>
+      <div class="label">SM — Cards</div>
+    </div>
+    <div class="wrap">
+      <div class="box" style="box-shadow:0 4px 24px rgba(46,31,14,0.10)"></div>
+      <div class="label">MD — Hover</div>
+    </div>
+    <div class="wrap">
+      <div class="box" style="box-shadow:0 8px 40px rgba(46,31,14,0.13)"></div>
+      <div class="label">LG — Modals</div>
+    </div>
+  </div>
+  <div class="section">Border Styles</div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap">
+    <div style="flex:1;min-width:140px;height:48px;border-radius:var(--radius-md);border:1px solid rgba(178,148,95,0.30);background:var(--warm-white);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--warm-gray)">Default border</div>
+    <div style="flex:1;min-width:140px;height:48px;border-radius:var(--radius-md);border:1px solid rgba(178,148,95,0.55);background:var(--warm-white);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--warm-gray)">Strong border</div>
+    <div style="flex:1;min-width:140px;height:48px;border-radius:var(--radius-md);border:1px solid rgba(46,31,14,0.12);background:var(--warm-white);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--warm-gray)">Dark border</div>
+  </div>
+</body>
+</html>

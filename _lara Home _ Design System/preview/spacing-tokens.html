@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--cream); padding: 20px 24px; font-family: var(--font-body); }
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: 16px; }
+  .spc { background: var(--gold); border-radius: 2px; }
+  .label { font-size: 9px; color: var(--warm-gray); text-align: center; margin-top: 4px; letter-spacing: 0.06em; }
+  .section { font-size: 9px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 10px; }
+  .radius-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .radius-box { background: var(--warm-white); border: 1.5px solid var(--gold); width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; }
+  .radius-label { font-size: 8px; color: var(--warm-gray); text-align: center; margin-top: 4px; letter-spacing: 0.06em; }
+  .r-wrap { text-align: center; }
+</style>
+</head>
+<body>
+  <div class="section">Spacing Tokens (8px grid)</div>
+  <div class="grid">
+    <div><div class="spc" style="height:4px"></div><div class="label">4px</div></div>
+    <div><div class="spc" style="height:8px"></div><div class="label">8px</div></div>
+    <div><div class="spc" style="height:12px"></div><div class="label">12px</div></div>
+    <div><div class="spc" style="height:16px"></div><div class="label">16px</div></div>
+    <div><div class="spc" style="height:24px"></div><div class="label">24px</div></div>
+    <div><div class="spc" style="height:32px"></div><div class="label">32px</div></div>
+    <div><div class="spc" style="height:40px"></div><div class="label">40px</div></div>
+    <div><div class="spc" style="height:48px"></div><div class="label">48px</div></div>
+    <div><div class="spc" style="height:64px"></div><div class="label">64px</div></div>
+    <div><div class="spc" style="height:80px"></div><div class="label">80px</div></div>
+  </div>
+  <div class="section">Corner Radii</div>
+  <div class="radius-row">
+    <div class="r-wrap"><div class="radius-box" style="border-radius:2px"></div><div class="radius-label">xs · 2px</div></div>
+    <div class="r-wrap"><div class="radius-box" style="border-radius:4px"></div><div class="radius-label">sm · 4px</div></div>
+    <div class="r-wrap"><div class="radius-box" style="border-radius:8px"></div><div class="radius-label">md · 8px</div></div>
+    <div class="r-wrap"><div class="radius-box" style="border-radius:16px"></div><div class="radius-label">lg · 16px</div></div>
+    <div class="r-wrap"><div class="radius-box" style="border-radius:24px"></div><div class="radius-label">xl · 24px</div></div>
+    <div class="r-wrap"><div class="radius-box" style="border-radius:100px"></div><div class="radius-label">pill</div></div>
+  </div>
+</body>
+</html>

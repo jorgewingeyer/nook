@@ -2,10 +2,12 @@ export const uploadFile = async (
   bucket: any,
   key: string,
   body: ArrayBuffer | ReadableStream<Uint8Array>,
-  metadata?: Record<string, string>,
+  metadata?: { contentType?: string; [key: string]: string | undefined },
 ) => {
+  const { contentType, ...rest } = metadata ?? {};
   return bucket.put(key, body, {
-    customMetadata: metadata,
+    httpMetadata: contentType ? { contentType } : undefined,
+    customMetadata: Object.keys(rest).length > 0 ? rest : undefined,
   });
 };
 

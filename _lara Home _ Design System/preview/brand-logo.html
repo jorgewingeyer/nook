@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #1A1410; padding: 28px 32px; font-family: var(--font-body); display: flex; flex-direction: column; gap: 20px; }
+
+  .row { display: flex; gap: 14px; align-items: stretch; }
+  .panel { border-radius: 14px; padding: 28px 36px; display: flex; align-items: center; justify-content: center; flex: 1; }
+  .panel-light { background: var(--cream); }
+  .panel-parchment { background: var(--parchment); }
+  .panel-dark { background: var(--espresso); }
+  .panel-gold { background: var(--gold); }
+
+  .icon-row { display: flex; gap: 20px; align-items: center; justify-content: center; }
+  .icon-chip { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .icon-bg { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+  .chip-label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+</style>
+</head>
+<body>
+
+  <!-- Light backgrounds -->
+  <div class="row">
+    <div class="panel panel-light">
+      <img src="../assets/logo.svg" width="220" alt="nook logo on cream">
+    </div>
+    <div class="panel panel-parchment">
+      <img src="../assets/logo.svg" width="200" alt="nook logo on parchment">
+    </div>
+  </div>
+
+  <!-- Dark background -->
+  <div class="row">
+    <div class="panel panel-dark" style="flex:2">
+      <img src="../assets/logo-dark.svg" width="220" alt="nook logo on dark">
+    </div>
+    <div class="panel panel-gold" style="flex:1">
+      <img src="../assets/logo-dark.svg" width="160" alt="nook logo on gold" style="filter:brightness(0) invert(1)">
+    </div>
+  </div>
+
+  <!-- Icon marks -->
+  <div class="panel panel-dark" style="border-radius:14px; padding: 20px">
+    <div class="icon-row">
+      <div class="icon-chip">
+        <div class="icon-bg" style="background:var(--cream)"><img src="../assets/icon-mark.svg" width="28" alt="mark"></div>
+        <span class="chip-label">Cream</span>
+      </div>
+      <div class="icon-chip">
+        <div class="icon-bg" style="background:var(--parchment)"><img src="../assets/icon-mark.svg" width="28" alt="mark"></div>
+        <span class="chip-label">Parchment</span>
+      </div>
+      <div class="icon-chip">
+        <div class="icon-bg" style="background:var(--gold)"><img src="../assets/icon-mark.svg" width="28" alt="mark" style="filter:brightness(0) invert(1)"></div>
+        <span class="chip-label">Gold</span>
+      </div>
+      <div class="icon-chip">
+        <div class="icon-bg" style="background:#3D2E1E"><img src="../assets/icon-mark.svg" width="28" alt="mark"></div>
+        <span class="chip-label">Stone</span>
+      </div>
+      <div class="icon-chip" style="margin-left:12px">
+        <span style="font-family:'Cormorant Garamond',Georgia,serif; font-size:2rem; font-weight:400; letter-spacing:0.08em; color:var(--gold-light)">nook</span>
+        <span class="chip-label">Wordmark solo</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

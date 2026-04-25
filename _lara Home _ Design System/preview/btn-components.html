@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--cream); padding: 24px; font-family: var(--font-body); }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; align-items: flex-start; }
+  .section { font-size: 9px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 12px; }
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 13px; font-weight: 500; letter-spacing: 0.06em; cursor: pointer; border: none; transition: all 220ms ease; text-transform: uppercase; }
+  .btn-primary { background: var(--gold); color: var(--warm-white); }
+  .btn-primary:hover { background: var(--gold-light); }
+  .btn-secondary { background: transparent; color: var(--espresso); border: 1.5px solid var(--gold); }
+  .btn-secondary:hover { background: var(--gold); color: white; }
+  .btn-ghost { background: transparent; color: var(--gold); border: none; padding: 12px 4px; border-bottom: 1px solid var(--gold); border-radius: 0; }
+  .btn-dark { background: var(--espresso); color: var(--cream); }
+  .btn-sm { padding: 8px 18px; font-size: 11px; }
+  .btn-lg { padding: 16px 40px; font-size: 14px; }
+  .btn:disabled, .btn-disabled { opacity: 0.4; cursor: not-allowed; }
+</style>
+</head>
+<body>
+  <div class="section">Primary</div>
+  <div class="row">
+    <button class="btn btn-primary btn-sm">Explorá</button>
+    <button class="btn btn-primary">Agregar al carrito</button>
+    <button class="btn btn-primary btn-lg">Descubrí la colección</button>
+    <button class="btn btn-primary" disabled>Sin stock</button>
+  </div>
+  <div class="section">Secondary & Ghost</div>
+  <div class="row">
+    <button class="btn btn-secondary btn-sm">Ver más</button>
+    <button class="btn btn-secondary">Ver detalle</button>
+    <button class="btn btn-ghost">Ver toda la colección →</button>
+  </div>
+  <div class="section">Dark / Inverse</div>
+  <div class="row" style="background:var(--espresso);padding:16px;border-radius:8px">
+    <button class="btn btn-dark" style="border:1.5px solid var(--gold-light);color:var(--gold-light)">Explorá ahora</button>
+    <button class="btn" style="background:var(--gold);color:white">Comprá hoy</button>
+  </div>
+</body>
+</html>

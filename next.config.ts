@@ -8,20 +8,7 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
-    remotePatterns: [
-      {
-        protocol: "http",
-        hostname: "localhost",
-        port: "3000",
-        pathname: "/api/assets/**",
-      },
-      {
-        protocol: "https",
-        hostname: "nook.localhost",
-        port: "1355",
-        pathname: "/api/assets/**",
-      },
-    ],
+    unoptimized: true,
   },
 };
 

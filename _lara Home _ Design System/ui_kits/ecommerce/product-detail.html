@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nook — Lámpara Arco Dorada</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--cream); font-family: var(--font-body); color: var(--fg1); -webkit-font-smoothing: antialiased; }
+  ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: var(--cream); } ::-webkit-scrollbar-thumb { background: var(--sand); border-radius: 3px; }
+</style>
+</head>
+<body>
+<script type="text/babel" src="CartDrawer.jsx"></script>
+<script type="text/babel">
+const { useState } = React;
+
+const PRODUCT = {
+  id: 1,
+  name: 'Lámpara Arco Dorada',
+  category: 'Iluminación',
+  subcategory: 'Lámparas de pie',
+  price: 89900,
+  sku: 'NLM-0042',
+  stars: 5,
+  reviewCount: 24,
+  badge: 'Nuevo ingreso',
+  description: 'Una pieza que transforma cualquier rincón en un refugio de calma. Diseñada con un arco escultórico en metal lacado dorado mate y pantalla de lino natural, esta lámpara combina lo moderno con lo artesanal — exactamente el espíritu de Nook.',
+  details: [
+    { label: 'Material', value: 'Base: Metal lacado dorado mate · Pantalla: Lino natural' },
+    { label: 'Dimensiones', value: 'Alto: 175 cm · Diámetro pantalla: 42 cm' },
+    { label: 'Potencia', value: 'E27 · Máx. 40W · Compatible LED' },
+    { label: 'Cable', value: '2 metros · Color dorado · Con interruptor en cable' },
+    { label: 'Origen', value: 'Diseño europeo · Producción artesanal' },
+    { label: 'SKU', value: 'NLM-0042' },
+  ],
+  images: [
+    'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&h=900&fit=crop&q=85',
+    'https://images.unsplash.com/photo-1524484485831-a92ffc0de03f?w=800&h=900&fit=crop&q=85',
+    'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=900&fit=crop&q=85',
+    'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&h=900&fit=crop&q=85',
+  ],
+  reviews: [
+    { name: 'Valentina M.', city: 'Buenos Aires', stars: 5, date: 'Marzo 2026', text: 'Llegó impecable y es aún más linda en persona. Transforma completamente el rincón de lectura de mi living. La calidad del lino es increíble.', verified: true },
+    { name: 'Carolina B.', city: 'Córdoba', stars: 5, date: 'Febrero 2026', text: 'Exactamente como en las fotos. El dorado es elegante, no ordinario. El servicio de Nook fue excelente — me avisaron en cada etapa del envío.', verified: true },
+    { name: 'Luciana R.', city: 'Rosario', stars: 4, date: 'Enero 2026', text: 'Muy linda y de gran calidad. Le saco una estrella porque la instrucción de armado podría ser más clara, pero el resultado final es espectacular.', verified: true },
+  ],
+  related: [
+    { id:2, name:'Jarrón Cerámica Osaka', category:'Jarrones', price:62500, image:'https://images.unsplash.com/photo-1616047006789-b7af5afb8c20?w=400&h=480&fit=crop&q=80' },
+    { id:3, name:'Vela Cedro & Sándalo', category:'Velas', price:18900, image:'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&h=480&fit=crop&q=80' },
+    { id:4, name:'Copas Cristal Bohemia', category:'Copas', price:38900, image:'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400&h=480&fit=crop&q=80' },
+    { id:5, name:'Manta Merino Camel', category:'Textiles', price:54900, image:'https://images.unsplash.com/photo-1580301762395-21ce84d00bc6?w=400&h=480&fit=crop&q=80' },
+  ],
+};
+
+/* ── NAV INLINE ── */
+const NookLogo = () => (
+  <a href="index.html" style={{ textDecoration:'none', display:'flex', alignItems:'center', gap:'10px' }}>
+    <svg width="32" height="38" viewBox="0 0 36 48" fill="none">
+      <path d="M4 44 L4 20 Q4 4 18 4 Q32 4 32 20 L32 44" stroke="#B8945F" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M11 44 L11 22 Q11 12 18 12 Q25 12 25 22 L25 44" stroke="#B8945F" strokeWidth="1.2" strokeLinecap="round" opacity="0.4"/>
+      <line x1="0" y1="44" x2="36" y2="44" stroke="#B8945F" strokeWidth="1.8" strokeLinecap="round"/>
+    </svg>
+    <span style={{ fontFamily:'var(--font-display)', fontSize:'26px', fontWeight:400, letterSpacing:'2px', color:'var(--espresso)', lineHeight:1 }}>nook</span>
+  </a>
+);
+
+const TopNav = ({ cartCount, onCartOpen }) => {
+  const [scrolled, setScrolled] = useState(false);
+  React.useEffect(() => {
+    const fn = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', fn);
+    return () => window.removeEventListener('scroll', fn);
+  }, []);
+  return (
+    <header style={{ position:'fixed', top:0, left:0, right:0, zIndex:100, background: scrolled ? 'rgba(245,237,224,0.94)':'var(--cream)', backdropFilter: scrolled ? 'blur(16px)':'none', borderBottom:'1px solid var(--border)', transition:'all 280ms ease' }}>
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'0 48px', height:'64px' }}>
+        <NookLogo />
+        <nav style={{ display:'flex', gap:'24px' }}>
+          {['Iluminación','Jarrones','Platos','Copas','Velas'].map(l => (
+            <a key={l} href="index.html" style={{ fontFamily:'var(--font-body)', fontSize:'12px', fontWeight:500, letterSpacing:'0.08em', textTransform:'uppercase', color:'var(--espresso)', textDecoration:'none', opacity:0.7, transition:'opacity 200ms' }}
+              onMouseOver={e=>e.target.style.opacity='1'} onMouseOut={e=>e.target.style.opacity='0.7'}>{l}</a>
+          ))}
+        </nav>
+        <div style={{ display:'flex', gap:'16px', alignItems:'center' }}>
+          <button style={{ background:'none', border:'none', cursor:'pointer', color:'var(--espresso)', display:'flex' }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+          </button>
+          <button onClick={onCartOpen} style={{ position:'relative', display:'flex', alignItems:'center', gap:'7px', background:'var(--espresso)', color:'var(--cream)', border:'none', borderRadius:'var(--radius-pill)', padding:'8px 16px', cursor:'pointer', fontFamily:'var(--font-body)', fontSize:'12px', fontWeight:500, letterSpacing:'0.06em' }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            Carrito {cartCount > 0 && <span style={{ background:'var(--gold)', color:'white', width:'16px', height:'16px', borderRadius:'50%', fontSize:'9px', fontWeight:700, display:'flex', alignItems:'center', justifyContent:'center' }}>{cartCount}</span>}
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+/* ── STAR RATING ── */
+const Stars = ({ n, size=14 }) => (
+  <span style={{ color:'var(--gold)', fontSize:`${size}px`, letterSpacing:'1.5px' }}>
+    {'★'.repeat(n)}{'☆'.repeat(5-n)}
+  </span>
+);
+
+/* ── ACCORDION ── */
+const Accordion = ({ title, children, defaultOpen=false }) => {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div style={{ borderBottom:'1px solid var(--border)' }}>
+      <button onClick={()=>setOpen(!open)} style={{ width:'100%', display:'flex', justifyContent:'space-between', alignItems:'center', padding:'16px 0', background:'none', border:'none', cursor:'pointer', fontFamily:'var(--font-body)', fontSize:'13px', fontWeight:500, letterSpacing:'0.06em', textTransform:'uppercase', color:'var(--espresso)' }}>
+        {title}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warm-gray)" strokeWidth="2" strokeLinecap="round" style={{ transition:'transform 250ms', transform: open ? 'rotate(180deg)':'rotate(0)' }}><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      {open && <div style={{ paddingBottom:'16px' }}>{children}</div>}
+    </div>
+  );
+};
+
+/* ── MAIN PAGE ── */
+const ProductPage = () => {
+  const [activeImg, setActiveImg] = useState(0);
+  const [qty, setQty] = useState(1);
+  const [wished, setWished] = useState(false);
+  const [addedMsg, setAddedMsg] = useState(false);
+  const [cart, setCart] = useState([]);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [zoom, setZoom] = useState(false);
+
+  const handleAddToCart = () => {
+    setCart(prev => {
+      const ex = prev.find(i=>i.id===PRODUCT.id);
+      return ex ? prev.map(i=>i.id===PRODUCT.id ? {...i,qty:i.qty+qty} : i) : [...prev,{...PRODUCT,qty}];
+    });
+    setAddedMsg(true);
+    setCartOpen(true);
+    setTimeout(()=>setAddedMsg(false), 2000);
+  };
+
+  return (
+    <>
+      <TopNav cartCount={cart.reduce((s,i)=>s+i.qty,0)} onCartOpen={()=>setCartOpen(true)} />
+      <CartDrawer open={cartOpen} onClose={()=>setCartOpen(false)} items={cart} onRemove={i=>setCart(prev=>prev.filter((_,j)=>j!==i))} />
+
+      <main style={{ paddingTop:'64px' }}>
+
+        {/* Breadcrumb */}
+        <div style={{ padding:'14px 48px', borderBottom:'1px solid var(--border)', background:'var(--warm-white)' }}>
+          <div style={{ display:'flex', gap:'8px', alignItems:'center', fontFamily:'var(--font-body)', fontSize:'12px', color:'var(--warm-gray)' }}>
+            {['Inicio','Iluminación','Lámparas de pie'].map((crumb, i, arr) => (
+              <React.Fragment key={crumb}>
+                <a href="index.html" style={{ color:'var(--warm-gray)', textDecoration:'none', transition:'color 180ms' }}
+                  onMouseOver={e=>e.target.style.color='var(--gold)'}
+                  onMouseOut={e=>e.target.style.color='var(--warm-gray)'}>{crumb}</a>
+                {i < arr.length-1 && <span style={{ opacity:0.4 }}>›</span>}
+              </React.Fragment>
+            ))}
+            <span style={{ opacity:0.4 }}>›</span>
+            <span style={{ color:'var(--espresso)', fontWeight:500 }}>{PRODUCT.name}</span>
+          </div>
+        </div>
+
+        {/* Product Section */}
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0', maxWidth:'1400px', margin:'0 auto', padding:'48px 48px 0' }}>
+
+          {/* Left: Gallery */}
+          <div style={{ paddingRight:'48px' }}>
+            {/* Main image */}
+            <div onClick={()=>setZoom(!zoom)} style={{ position:'relative', borderRadius:'var(--radius-lg)', overflow:'hidden', marginBottom:'14px', cursor:'zoom-in', background:'var(--parchment)', aspectRatio:'4/5' }}>
+              <img src={PRODUCT.images[activeImg]} alt={PRODUCT.name} style={{ width:'100%', height:'100%', objectFit:'cover', transition:'transform 400ms ease', transform: zoom ? 'scale(1.08)':'scale(1)' }} />
+              {/* Badge */}
+              <div style={{ position:'absolute', top:'16px', left:'16px', background:'var(--gold)', color:'white', fontSize:'10px', fontWeight:600, letterSpacing:'0.1em', textTransform:'uppercase', padding:'5px 12px', borderRadius:'var(--radius-pill)', fontFamily:'var(--font-body)' }}>{PRODUCT.badge}</div>
+              {/* Wishlist */}
+              <button onClick={e=>{e.stopPropagation();setWished(!wished);}} style={{ position:'absolute', top:'14px', right:'14px', background:'rgba(250,246,241,0.92)', border:'none', borderRadius:'50%', width:'40px', height:'40px', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', fontSize:'20px', color: wished?'#C9A0A0':'#B8A090', boxShadow:'var(--shadow-sm)', backdropFilter:'blur(6px)', transition:'transform 200ms' }}
+                onMouseOver={e=>e.currentTarget.style.transform='scale(1.1)'}
+                onMouseOut={e=>e.currentTarget.style.transform='scale(1)'}
+              >{wished?'♥':'♡'}</button>
+            </div>
+            {/* Thumbnails */}
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'10px' }}>
+              {PRODUCT.images.map((img,i) => (
+                <div key={i} onClick={()=>setActiveImg(i)} style={{ borderRadius:'var(--radius-md)', overflow:'hidden', cursor:'pointer', border:`2px solid ${activeImg===i ? 'var(--gold)':'transparent'}`, transition:'border-color 200ms', aspectRatio:'1', background:'var(--parchment)' }}>
+                  <img src={img} alt={`Vista ${i+1}`} style={{ width:'100%', height:'100%', objectFit:'cover', opacity: activeImg===i ? 1:0.7, transition:'opacity 200ms' }} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: Info */}
+          <div style={{ paddingLeft:'48px', paddingBottom:'48px' }}>
+            {/* Category & rating */}
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'10px' }}>
+              <span style={{ fontFamily:'var(--font-body)', fontSize:'11px', fontWeight:600, letterSpacing:'0.16em', textTransform:'uppercase', color:'var(--gold)' }}>{PRODUCT.category}</span>
+              <div style={{ display:'flex', alignItems:'center', gap:'6px' }}>
+                <Stars n={PRODUCT.stars} size={13} />
+                <a href="#reviews" style={{ fontFamily:'var(--font-body)', fontSize:'12px', color:'var(--warm-gray)', textDecoration:'none', borderBottom:'1px solid var(--border)' }}>{PRODUCT.reviewCount} reseñas</a>
+              </div>
+            </div>
+
+            {/* Name */}
+            <h1 style={{ fontFamily:'var(--font-display)', fontSize:'clamp(2rem,3vw,2.8rem)', fontWeight:300, color:'var(--espresso)', lineHeight:1.15, letterSpacing:'-0.01em', marginBottom:'16px' }}>{PRODUCT.name}</h1>
+
+            {/* Price */}
+            <div style={{ display:'flex', alignItems:'baseline', gap:'12px', marginBottom:'20px', padding:'16px 0', borderTop:'1px solid var(--border)', borderBottom:'1px solid var(--border)' }}>
+              <span style={{ fontFamily:'var(--font-body)', fontSize:'28px', fontWeight:600, color:'var(--espresso)' }}>${PRODUCT.price.toLocaleString('es-AR')}</span>
+              <span style={{ fontFamily:'var(--font-body)', fontSize:'13px', color:'var(--warm-gray)' }}>IVA incluido</span>
+              <span style={{ fontFamily:'var(--font-body)', fontSize:'13px', color:'var(--sage)', fontWeight:500 }}>✓ En stock</span>
+            </div>
+
+            {/* Description */}
+            <p style={{ fontFamily:'var(--font-body)', fontSize:'15px', lineHeight:1.8, color:'var(--warm-gray)', marginBottom:'28px' }}>{PRODUCT.description}</p>
+
+            {/* Qty */}
+            <div style={{ marginBottom:'20px' }}>
+              <div style={{ fontFamily:'var(--font-body)', fontSize:'11px', fontWeight:600, letterSpacing:'0.12em', textTransform:'uppercase', color:'var(--espresso)', marginBottom:'10px' }}>Cantidad</div>
+              <div style={{ display:'flex', alignItems:'center', gap:'0', border:'1.5px solid var(--border-strong)', borderRadius:'var(--radius-pill)', width:'fit-content', overflow:'hidden' }}>
+                <button onClick={()=>setQty(q=>Math.max(1,q-1))} style={{ width:'44px', height:'44px', background:'none', border:'none', cursor:'pointer', fontSize:'18px', color:'var(--espresso)', display:'flex', alignItems:'center', justifyContent:'center', transition:'background 180ms' }}
+                  onMouseOver={e=>e.currentTarget.style.background='var(--parchment)'} onMouseOut={e=>e.currentTarget.style.background='none'}>−</button>
+                <span style={{ minWidth:'40px', textAlign:'center', fontFamily:'var(--font-body)', fontSize:'15px', fontWeight:500, color:'var(--espresso)' }}>{qty}</span>
+                <button onClick={()=>setQty(q=>q+1)} style={{ width:'44px', height:'44px', background:'none', border:'none', cursor:'pointer', fontSize:'18px', color:'var(--espresso)', display:'flex', alignItems:'center', justifyContent:'center', transition:'background 180ms' }}
+                  onMouseOver={e=>e.currentTarget.style.background='var(--parchment)'} onMouseOut={e=>e.currentTarget.style.background='none'}>+</button>
+              </div>
+            </div>
+
+            {/* CTAs */}
+            <div style={{ display:'flex', gap:'12px', marginBottom:'24px' }}>
+              <button onClick={handleAddToCart} style={{ flex:1, padding:'15px 28px', borderRadius:'var(--radius-pill)', border:'none', background: addedMsg ? 'var(--success)':'var(--espresso)', color:'var(--cream)', fontFamily:'var(--font-body)', fontSize:'13px', fontWeight:500, letterSpacing:'0.1em', textTransform:'uppercase', cursor:'pointer', transition:'background 300ms ease' }}>
+                {addedMsg ? '✓ Agregado al carrito' : 'Agregar al carrito'}
+              </button>
+              <button style={{ padding:'15px 24px', borderRadius:'var(--radius-pill)', border:'1.5px solid var(--border-strong)', background:'transparent', color:'var(--espresso)', fontFamily:'var(--font-body)', fontSize:'13px', fontWeight:500, letterSpacing:'0.08em', textTransform:'uppercase', cursor:'pointer', transition:'all 200ms' }}
+                onMouseOver={e=>{e.currentTarget.style.background='var(--espresso)';e.currentTarget.style.color='var(--cream)';}}
+                onMouseOut={e=>{e.currentTarget.style.background='transparent';e.currentTarget.style.color='var(--espresso)';}}>
+                Comprar ya
+              </button>
+            </div>
+
+            {/* Delivery & trust */}
+            <div style={{ background:'var(--warm-white)', borderRadius:'var(--radius-md)', border:'1px solid var(--border)', overflow:'hidden', marginBottom:'28px' }}>
+              {[
+                { icon:'🚚', title:'Envío gratis', sub:'A todo el país · Llega en 3–5 días hábiles' },
+                { icon:'↩', title:'Devoluciones gratis', sub:'30 días sin preguntas' },
+                { icon:'🔒', title:'Pago 100% seguro', sub:'Todas las tarjetas · Cuotas sin interés' },
+              ].map(({icon,title,sub}, i, arr) => (
+                <div key={title} style={{ display:'flex', alignItems:'center', gap:'14px', padding:'14px 18px', borderBottom: i<arr.length-1 ? '1px solid var(--border)':'none' }}>
+                  <span style={{ fontSize:'20px', width:'28px', textAlign:'center' }}>{icon}</span>
+                  <div>
+                    <div style={{ fontFamily:'var(--font-body)', fontSize:'13px', fontWeight:500, color:'var(--espresso)' }}>{title}</div>
+                    <div style={{ fontFamily:'var(--font-body)', fontSize:'11px', color:'var(--warm-gray)', marginTop:'2px' }}>{sub}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Accordions */}
+            <div>
+              <Accordion title="Especificaciones" defaultOpen={true}>
+                <div style={{ display:'grid', gap:'10px' }}>
+                  {PRODUCT.details.map(({label,value}) => (
+                    <div key={label} style={{ display:'grid', gridTemplateColumns:'120px 1fr', gap:'12px' }}>
+                      <span style={{ fontFamily:'var(--font-body)', fontSize:'12px', fontWeight:600, letterSpacing:'0.04em', color:'var(--warm-gray)', textTransform:'uppercase', fontSize:'10px' }}>{label}</span>
+                      <span style={{ fontFamily:'var(--font-body)', fontSize:'13px', color:'var(--espresso)', lineHeight:1.5 }}>{value}</span>
+                    </div>
+                  ))}
+                </div>
+              </Accordion>
+              <Accordion title="Cuidados">
+                <p style={{ fontFamily:'var(--font-body)', fontSize:'13px', color:'var(--warm-gray)', lineHeight:1.7 }}>Limpiar la base metálica con paño seco. La pantalla de lino puede limpiarse suavemente con un pincel de cerdas suaves. Evitar la humedad directa. No utilizar productos abrasivos.</p>
+              </Accordion>
+              <Accordion title="Envío y devoluciones">
+                <p style={{ fontFamily:'var(--font-body)', fontSize:'13px', color:'var(--warm-gray)', lineHeight:1.7 }}>Despachamos dentro de las 48hs hábiles. Envío gratis a todo el país en compras superiores a $50.000. Devoluciones sin costo dentro de los 30 días de recibido el pedido — el producto debe estar sin uso y en su embalaje original.</p>
+              </Accordion>
+            </div>
+          </div>
+        </div>
+
+        {/* Reviews Section */}
+        <section id="reviews" style={{ padding:'72px 48px', background:'var(--warm-white)', marginTop:'72px' }}>
+          <div style={{ maxWidth:'1000px', margin:'0 auto' }}>
+            {/* Header */}
+            <div style={{ display:'grid', gridTemplateColumns:'auto 1fr', gap:'64px', alignItems:'start', marginBottom:'48px' }}>
+              <div style={{ textAlign:'center' }}>
+                <div style={{ fontFamily:'var(--font-display)', fontSize:'4rem', fontWeight:300, color:'var(--espresso)', lineHeight:1 }}>4.9</div>
+                <Stars n={5} size={18} />
+                <div style={{ fontFamily:'var(--font-body)', fontSize:'12px', color:'var(--warm-gray)', marginTop:'6px' }}>{PRODUCT.reviewCount} reseñas verificadas</div>
+              </div>
+              <div>
+                <h2 style={{ fontFamily:'var(--font-display)', fontSize:'1.8rem', fontWeight:300, color:'var(--espresso)', marginBottom:'8px' }}>Opiniones de nuestras clientas</h2>
+                <p style={{ fontFamily:'var(--font-body)', fontSize:'14px', color:'var(--warm-gray)', lineHeight:1.7 }}>Cada reseña es verificada — solo pueden opinar quienes compraron el producto.</p>
+              </div>
+            </div>
+
+            {/* Review list */}
+            <div style={{ display:'grid', gap:'24px' }}>
+              {PRODUCT.reviews.map((r,i) => (
+                <div key={i} style={{ background:'var(--cream)', borderRadius:'var(--radius-md)', padding:'28px 32px', border:'1px solid var(--border)', display:'grid', gridTemplateColumns:'auto 1fr', gap:'24px' }}>
+                  {/* Avatar */}
+                  <div style={{ width:'48px', height:'48px', borderRadius:'50%', background:'var(--parchment)', border:'1.5px solid var(--sand)', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'var(--font-display)', fontSize:'1.2rem', color:'var(--warm-gray)', flexShrink:0 }}>
+                    {r.name[0]}
+                  </div>
+                  <div>
+                    <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'8px' }}>
+                      <div>
+                        <Stars n={r.stars} size={13} />
+                        <div style={{ display:'flex', alignItems:'center', gap:'8px', marginTop:'4px' }}>
+                          <span style={{ fontFamily:'var(--font-body)', fontSize:'13px', fontWeight:500, color:'var(--espresso)' }}>{r.name}</span>
+                          <span style={{ fontFamily:'var(--font-body)', fontSize:'11px', color:'var(--warm-gray)' }}>· {r.city}</span>
+                          {r.verified && <span style={{ fontFamily:'var(--font-body)', fontSize:'10px', color:'var(--sage)', fontWeight:500, letterSpacing:'0.06em' }}>✓ Compra verificada</span>}
+                        </div>
+                      </div>
+                      <span style={{ fontFamily:'var(--font-body)', fontSize:'11px', color:'var(--warm-gray)' }}>{r.date}</span>
+                    </div>
+                    <p style={{ fontFamily:'var(--font-display)', fontSize:'1rem', fontStyle:'italic', color:'var(--espresso)', lineHeight:1.65 }}>"{r.text}"</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Related products */}
+        <section style={{ padding:'72px 48px', background:'var(--cream)' }}>
+          <div style={{ maxWidth:'1200px', margin:'0 auto' }}>
+            <div style={{ textAlign:'center', marginBottom:'40px' }}>
+              <div style={{ fontFamily:'var(--font-body)', fontSize:'10px', fontWeight:600, letterSpacing:'0.2em', textTransform:'uppercase', color:'var(--gold)', marginBottom:'10px' }}>✦ También te puede gustar</div>
+              <h2 style={{ fontFamily:'var(--font-display)', fontSize:'clamp(1.6rem,2.5vw,2.4rem)', fontWeight:300, color:'var(--espresso)' }}>Completá tu rincón</h2>
+            </div>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'16px' }}>
+              {PRODUCT.related.map(p => (
+                <div key={p.id} style={{ background:'var(--warm-white)', borderRadius:'var(--radius-md)', overflow:'hidden', border:'1px solid var(--border)', cursor:'pointer', transition:'all 240ms ease' }}
+                  onMouseOver={e=>{ e.currentTarget.style.boxShadow='var(--shadow-md)'; e.currentTarget.style.transform='translateY(-3px)'; }}
+                  onMouseOut={e=>{ e.currentTarget.style.boxShadow='none'; e.currentTarget.style.transform='none'; }}
+                >
+                  <div style={{ height:'200px', overflow:'hidden', background:'var(--parchment)' }}>
+                    <img src={p.image} alt={p.name} style={{ width:'100%', height:'100%', objectFit:'cover', transition:'transform 400ms ease' }}
+                      onMouseOver={e=>e.target.style.transform='scale(1.05)'}
+                      onMouseOut={e=>e.target.style.transform='scale(1)'}
+                    />
+                  </div>
+                  <div style={{ padding:'14px' }}>
+                    <div style={{ fontFamily:'var(--font-body)', fontSize:'9px', letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--warm-gray)', marginBottom:'4px' }}>{p.category}</div>
+                    <div style={{ fontFamily:'var(--font-display)', fontSize:'1rem', color:'var(--espresso)', lineHeight:1.3, marginBottom:'8px' }}>{p.name}</div>
+                    <div style={{ fontFamily:'var(--font-body)', fontSize:'14px', fontWeight:600, color:'var(--espresso)' }}>${p.price.toLocaleString('es-AR')}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Footer strip */}
+        <div style={{ background:'var(--espresso)', padding:'20px 48px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:'10px' }}>
+            <svg width="24" height="28" viewBox="0 0 36 48" fill="none"><path d="M4 44 L4 20 Q4 4 18 4 Q32 4 32 20 L32 44" stroke="#D4AF7A" strokeWidth="2" strokeLinecap="round"/><line x1="0" y1="44" x2="36" y2="44" stroke="#D4AF7A" strokeWidth="1.8" strokeLinecap="round"/></svg>
+            <span style={{ fontFamily:'var(--font-display)', fontSize:'20px', fontWeight:400, letterSpacing:'2px', color:'var(--cream)' }}>nook</span>
+          </div>
+          <span style={{ fontFamily:'var(--font-body)', fontSize:'11px', color:'rgba(245,237,224,0.35)', letterSpacing:'0.06em' }}>© 2026 Nook. Todos los derechos reservados.</span>
+          <div style={{ display:'flex', gap:'20px' }}>
+            {['Términos','Privacidad','Contacto'].map(l=>(
+              <a key={l} href="#" style={{ fontFamily:'var(--font-body)', fontSize:'11px', color:'rgba(245,237,224,0.45)', textDecoration:'none', transition:'color 180ms' }}
+                onMouseOver={e=>e.target.style.color='var(--cream)'} onMouseOut={e=>e.target.style.color='rgba(245,237,224,0.45)'}>{l}</a>
+            ))}
+          </div>
+        </div>
+
+      </main>
+    </>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<ProductPage />);
+</script>
+<div id="root"></div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--warm-white); padding: 20px; font-family: var(--font-body); }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .token { border-radius: var(--radius-sm); overflow: hidden; border: 1px solid rgba(0,0,0,0.06); }
+  .color { height: 52px; }
+  .info { padding: 6px 8px; background: white; }
+  .name { font-size: 10px; font-weight: 500; color: var(--espresso); }
+  .role { font-size: 9px; color: var(--warm-gray); margin-top: 2px; }
+  .section-label { font-size: 9px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 8px; margin-top: 14px; }
+  .section-label:first-child { margin-top: 0; }
+</style>
+</head>
+<body>
+<div class="section-label">Text Tokens</div>
+<div class="grid">
+  <div class="token"><div class="color" style="background:#1A1410"></div><div class="info"><div class="name">--fg1</div><div class="role">Primary text</div></div></div>
+  <div class="token"><div class="color" style="background:#2E1F0E"></div><div class="info"><div class="name">--fg2</div><div class="role">Headings</div></div></div>
+  <div class="token"><div class="color" style="background:#7A6A58"></div><div class="info"><div class="name">--fg3</div><div class="role">Muted / secondary</div></div></div>
+  <div class="token"><div class="color" style="background:#B8945F"></div><div class="info"><div class="name">--fg-accent</div><div class="role">Accent text</div></div></div>
+</div>
+<div class="section-label">Background Tokens</div>
+<div class="grid">
+  <div class="token"><div class="color" style="background:#F5EDE0"></div><div class="info"><div class="name">--bg-base</div><div class="role">Page bg</div></div></div>
+  <div class="token"><div class="color" style="background:#FAF6F1"></div><div class="info"><div class="name">--bg-surface</div><div class="role">Cards / panels</div></div></div>
+  <div class="token"><div class="color" style="background:#EEE0CC"></div><div class="info"><div class="name">--bg-muted</div><div class="role">Subtle sections</div></div></div>
+  <div class="token"><div class="color" style="background:#2E1F0E"></div><div class="info"><div class="name">--bg-dark</div><div class="role">Dark sections</div></div></div>
+</div>
+<div class="section-label">Interactive Tokens</div>
+<div class="grid">
+  <div class="token"><div class="color" style="background:#B8945F"></div><div class="info"><div class="name">--interactive</div><div class="role">Default</div></div></div>
+  <div class="token"><div class="color" style="background:#D4AF7A"></div><div class="info"><div class="name">--interactive-hover</div><div class="role">Hover</div></div></div>
+  <div class="token"><div class="color" style="background:#8A6B3D"></div><div class="info"><div class="name">--interactive-press</div><div class="role">Pressed</div></div></div>
+  <div class="token"><div class="color" style="background:#6B9E72"></div><div class="info"><div class="name">--success</div><div class="role">Success state</div></div></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--warm-white); padding: 20px; font-family: var(--font-body); }
+  .row { display: flex; gap: 6px; margin-bottom: 6px; }
+  .swatch { flex: 1; border-radius: var(--radius-sm); overflow: hidden; }
+  .color { height: 64px; }
+  .info { padding: 6px 8px; background: white; }
+  .name { font-size: 10px; font-weight: 500; color: var(--espresso); letter-spacing: 0.04em; text-transform: uppercase; }
+  .hex  { font-size: 10px; color: var(--warm-gray); font-family: monospace; }
+  .section-label { font-size: 9px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 6px; margin-top: 12px; }
+  .section-label:first-child { margin-top: 0; }
+</style>
+</head>
+<body>
+<div class="section-label">Gold Scale</div>
+<div class="row">
+  <div class="swatch"><div class="color" style="background:#EDD9B4"></div><div class="info"><div class="name">Gold Lighter</div><div class="hex">#EDD9B4</div></div></div>
+  <div class="swatch"><div class="color" style="background:#D4AF7A"></div><div class="info"><div class="name">Gold Light</div><div class="hex">#D4AF7A</div></div></div>
+  <div class="swatch"><div class="color" style="background:#B8945F"></div><div class="info"><div class="name">Gold</div><div class="hex">#B8945F</div></div></div>
+  <div class="swatch"><div class="color" style="background:#8A6B3D"></div><div class="info"><div class="name">Gold Dark</div><div class="hex">#8A6B3D</div></div></div>
+  <div class="swatch"><div class="color" style="background:#5E4520"></div><div class="info"><div class="name">Gold Darker</div><div class="hex">#5E4520</div></div></div>
+</div>
+<div class="section-label">Warm Neutrals</div>
+<div class="row">
+  <div class="swatch"><div class="color" style="background:#FAF6F1"></div><div class="info"><div class="name">Warm White</div><div class="hex">#FAF6F1</div></div></div>
+  <div class="swatch"><div class="color" style="background:#F5EDE0"></div><div class="info"><div class="name">Cream</div><div class="hex">#F5EDE0</div></div></div>
+  <div class="swatch"><div class="color" style="background:#EEE0CC"></div><div class="info"><div class="name">Parchment</div><div class="hex">#EEE0CC</div></div></div>
+  <div class="swatch"><div class="color" style="background:#E2C9A0"></div><div class="info"><div class="name">Sand</div><div class="hex">#E2C9A0</div></div></div>
+  <div class="swatch"><div class="color" style="background:#C4A882"></div><div class="info"><div class="name">Warm Tan</div><div class="hex">#C4A882</div></div></div>
+</div>
+<div class="section-label">Darks & Accents</div>
+<div class="row">
+  <div class="swatch"><div class="color" style="background:#7A6A58"></div><div class="info"><div class="name">Warm Gray</div><div class="hex">#7A6A58</div></div></div>
+  <div class="swatch"><div class="color" style="background:#4D3D2C"></div><div class="info"><div class="name">Stone</div><div class="hex">#4D3D2C</div></div></div>
+  <div class="swatch"><div class="color" style="background:#2E1F0E"></div><div class="info"><div class="name">Espresso</div><div class="hex">#2E1F0E</div></div></div>
+  <div class="swatch"><div class="color" style="background:#D9B8B0"></div><div class="info"><div class="name">Blush</div><div class="hex">#D9B8B0</div></div></div>
+  <div class="swatch"><div class="color" style="background:#8A9E8C"></div><div class="info"><div class="name">Sage</div><div class="hex">#8A9E8C</div></div></div>
+</div>
+</body>
+</html>

@@ -1,3 +1,11 @@
 # Cloudflare development environment variables (used by Wrangler and OpenNext)
 NEXTJS_ENV=development
 SESSION_SECRET=a_very_secret_key_for_development_only_at_least_32_chars
+
+# MercadoPago — get from https://www.mercadopago.com.ar/developers/panel
+# Use sandbox credentials for development (prefix: TEST-)
+MP_ACCESS_TOKEN=TEST-your-access-token-here
+
+# Public URL for MercadoPago back_urls and webhooks
+# In production: https://your-domain.com
+NEXT_PUBLIC_APP_URL=https://nook.localhost:1355

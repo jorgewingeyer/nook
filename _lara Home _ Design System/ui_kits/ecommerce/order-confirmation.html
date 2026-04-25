@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nook — ¡Pedido confirmado!</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--cream);font-family:var(--font-body);-webkit-font-smoothing:antialiased;min-height:100vh}
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes checkPop { 0%{transform:scale(0)} 70%{transform:scale(1.15)} 100%{transform:scale(1)} }
+  @keyframes confettiFall { from{transform:translateY(-20px) rotate(0deg);opacity:1} to{transform:translateY(120px) rotate(360deg);opacity:0} }
+  .fade-up { animation: fadeUp 500ms ease both; }
+</style>
+</head>
+<body>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const ORDER = {
+  number: 'NKH-2026-0847',
+  date: '25 de abril de 2026',
+  email: 'valentina@email.com',
+  estimatedDelivery: '30 de abril – 2 de mayo de 2026',
+  address: 'Av. Santa Fe 2390, Piso 4B · Buenos Aires',
+  items: [
+    { name:'Lámpara Arco Dorada', category:'Iluminación', price:89900, qty:1, image:'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=200&h=200&fit=crop&q=80' },
+    { name:'Jarrón Cerámica Osaka', category:'Jarrones', price:62500, qty:2, image:'https://images.unsplash.com/photo-1616047006789-b7af5afb8c20?w=200&h=200&fit=crop&q=80' },
+    { name:'Vela Cedro & Sándalo', category:'Velas', price:18900, qty:1, image:'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=200&h=200&fit=crop&q=80' },
+  ],
+  total: 234200,
+};
+
+const Confetti = () => {
+  const pieces = Array.from({length:18}, (_,i) => ({
+    x: Math.random()*100, delay: Math.random()*1.5,
+    color: ['#B8945F','#D4AF7A','#D9B8B0','#8A9E8C','#EDD9B4'][Math.floor(Math.random()*5)],
+    size: 6 + Math.random()*8,
+  }));
+  return (
+    <div style={{position:'fixed',top:0,left:0,right:0,height:'200px',overflow:'hidden',pointerEvents:'none',zIndex:10}}>
+      {pieces.map((p,i) => (
+        <div key={i} style={{
+          position:'absolute', left:`${p.x}%`, top:'-20px',
+          width:`${p.size}px`, height:`${p.size}px`,
+          background: p.color, borderRadius: i%3===0?'50%':'2px',
+          animation:`confettiFall ${1.5+Math.random()}s ${p.delay}s ease-in both`,
+        }}/>
+      ))}
+    </div>
+  );
+};
+
+const NookLogo = () => (
+  <a href="index.html" style={{textDecoration:'none',display:'flex',alignItems:'center',gap:'9px'}}>
+    <svg width="28" height="34" viewBox="0 0 36 48" fill="none">
+      <path d="M4 44 L4 20 Q4 4 18 4 Q32 4 32 20 L32 44" stroke="#B8945F" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M11 44 L11 22 Q11 12 18 12 Q25 12 25 22 L25 44" stroke="#B8945F" strokeWidth="1.2" strokeLinecap="round" opacity="0.4"/>
+      <line x1="0" y1="44" x2="36" y2="44" stroke="#B8945F" strokeWidth="1.8" strokeLinecap="round"/>
+    </svg>
+    <span style={{fontFamily:'var(--font-display)',fontSize:'24px',fontWeight:400,letterSpacing:'2px',color:'var(--espresso)',lineHeight:1}}>nook</span>
+  </a>
+);
+
+const CheckIcon = () => (
+  <div style={{width:'72px',height:'72px',borderRadius:'50%',background:'linear-gradient(135deg,#6B9E72,#4A7B52)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 24px',animation:'checkPop 600ms 300ms cubic-bezier(0.34,1.56,0.64,1) both',boxShadow:'0 8px 32px rgba(107,158,114,0.4)'}}>
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  </div>
+);
+
+const TrackingStep = ({ icon, title, desc, done, active }) => (
+  <div style={{display:'flex',gap:'16px',alignItems:'flex-start'}}>
+    <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:'0'}}>
+      <div style={{width:'36px',height:'36px',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'16px',flexShrink:0,
+        background: done?'var(--gold)': active?'var(--espresso)':'var(--parchment)',
+        border: active&&!done?'2px solid var(--espresso)':'none',
+        transition:'all 400ms'
+      }}>{icon}</div>
+    </div>
+    <div style={{paddingTop:'6px',paddingBottom:'24px'}}>
+      <div style={{fontFamily:'var(--font-body)',fontSize:'13px',fontWeight:600,color: done||active?'var(--espresso)':'var(--warm-gray)',marginBottom:'3px'}}>{title}</div>
+      <div style={{fontFamily:'var(--font-body)',fontSize:'12px',color:'var(--warm-gray)',lineHeight:1.5}}>{desc}</div>
+    </div>
+  </div>
+);
+
+const App = () => {
+  const [shown, setShown] = useState(false);
+  useEffect(()=>{ setTimeout(()=>setShown(true),100); },[]);
+
+  return (
+    <div style={{minHeight:'100vh',background:'var(--cream)'}}>
+      <Confetti/>
+      <header style={{background:'var(--warm-white)',borderBottom:'1px solid var(--border)',padding:'0 48px',height:'64px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+        <NookLogo/>
+        <a href="index.html" style={{fontFamily:'var(--font-body)',fontSize:'12px',color:'var(--warm-gray)',textDecoration:'none',letterSpacing:'0.06em'}}>Seguir comprando →</a>
+      </header>
+
+      <div style={{maxWidth:'960px',margin:'0 auto',padding:'56px 48px'}}>
+        {/* Hero confirmation */}
+        <div className="fade-up" style={{textAlign:'center',marginBottom:'56px'}}>
+          <CheckIcon/>
+          <h1 style={{fontFamily:'var(--font-display)',fontSize:'clamp(2rem,4vw,3rem)',fontWeight:300,color:'var(--espresso)',lineHeight:1.2,marginBottom:'14px'}}>
+            ¡Tu pedido está confirmado!
+          </h1>
+          <p style={{fontFamily:'var(--font-body)',fontSize:'16px',fontWeight:300,color:'var(--warm-gray)',lineHeight:1.7,maxWidth:'520px',margin:'0 auto 16px'}}>
+            Gracias por elegir Nook. Te enviamos la confirmación a <strong style={{color:'var(--espresso)'}}>{ORDER.email}</strong>
+          </p>
+          <div style={{display:'inline-flex',alignItems:'center',gap:'8px',background:'var(--parchment)',border:'1px solid var(--border)',borderRadius:'var(--radius-pill)',padding:'8px 20px'}}>
+            <span style={{fontFamily:'var(--font-body)',fontSize:'11px',fontWeight:600,letterSpacing:'0.1em',textTransform:'uppercase',color:'var(--warm-gray)'}}>N° de pedido</span>
+            <span style={{fontFamily:'var(--font-body)',fontSize:'13px',fontWeight:600,color:'var(--espresso)'}}>{ORDER.number}</span>
+          </div>
+        </div>
+
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'24px',marginBottom:'24px'}}>
+          {/* Order details */}
+          <div className="fade-up" style={{animationDelay:'150ms',background:'var(--warm-white)',borderRadius:'var(--radius-lg)',border:'1px solid var(--border)',padding:'28px'}}>
+            <h3 style={{fontFamily:'var(--font-body)',fontSize:'11px',fontWeight:600,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--warm-gray)',marginBottom:'20px'}}>Detalle del pedido</h3>
+            <div style={{display:'flex',flexDirection:'column',gap:'14px',marginBottom:'20px',paddingBottom:'20px',borderBottom:'1px solid var(--border)'}}>
+              {ORDER.items.map(item => (
+                <div key={item.name} style={{display:'flex',gap:'12px',alignItems:'center'}}>
+                  <div style={{width:'52px',height:'52px',borderRadius:'var(--radius-sm)',overflow:'hidden',background:'var(--parchment)',flexShrink:0}}>
+                    <img src={item.image} alt={item.name} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+                  </div>
+                  <div style={{flex:1}}>
+                    <div style={{fontFamily:'var(--font-display)',fontSize:'0.9rem',color:'var(--espresso)',lineHeight:1.3}}>{item.name}</div>
+                    <div style={{fontFamily:'var(--font-body)',fontSize:'11px',color:'var(--warm-gray)',marginTop:'2px'}}>Cant: {item.qty}</div>
+                  </div>
+                  <div style={{fontFamily:'var(--font-body)',fontSize:'13px',fontWeight:500,color:'var(--espresso)'}}>${(item.price*item.qty).toLocaleString('es-AR')}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline'}}>
+              <span style={{fontFamily:'var(--font-body)',fontSize:'13px',fontWeight:600,color:'var(--espresso)'}}>Total pagado</span>
+              <span style={{fontFamily:'var(--font-display)',fontSize:'1.4rem',fontWeight:500,color:'var(--espresso)'}}>${ORDER.total.toLocaleString('es-AR')}</span>
+            </div>
+          </div>
+
+          {/* Delivery info */}
+          <div className="fade-up" style={{animationDelay:'200ms',display:'flex',flexDirection:'column',gap:'16px'}}>
+            <div style={{background:'var(--warm-white)',borderRadius:'var(--radius-lg)',border:'1px solid var(--border)',padding:'24px'}}>
+              <h3 style={{fontFamily:'var(--font-body)',fontSize:'11px',fontWeight:600,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--warm-gray)',marginBottom:'14px'}}>Envío a</h3>
+              <p style={{fontFamily:'var(--font-body)',fontSize:'13px',color:'var(--espresso)',lineHeight:1.6}}>{ORDER.address}</p>
+              <div style={{marginTop:'12px',display:'flex',alignItems:'center',gap:'8px',padding:'10px 14px',background:'rgba(107,158,114,0.1)',borderRadius:'var(--radius-md)'}}>
+                <span style={{fontSize:'14px'}}>📦</span>
+                <div>
+                  <div style={{fontFamily:'var(--font-body)',fontSize:'12px',fontWeight:500,color:'var(--espresso)'}}>Entrega estimada</div>
+                  <div style={{fontFamily:'var(--font-body)',fontSize:'11px',color:'var(--warm-gray)'}}>{ORDER.estimatedDelivery}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Tracking timeline */}
+            <div style={{background:'var(--warm-white)',borderRadius:'var(--radius-lg)',border:'1px solid var(--border)',padding:'24px'}}>
+              <h3 style={{fontFamily:'var(--font-body)',fontSize:'11px',fontWeight:600,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--warm-gray)',marginBottom:'20px'}}>Estado del pedido</h3>
+              <TrackingStep icon="✓" title="Pedido confirmado" desc="25 de abril · 14:32 hs" done={true}/>
+              <TrackingStep icon="📦" title="En preparación" desc="Estamos preparando tu pedido con mucho cuidado" active={true}/>
+              <TrackingStep icon="🚚" title="En camino" desc="Recibirás un email con el seguimiento" done={false}/>
+              <TrackingStep icon="🏠" title="Entregado" desc={ORDER.estimatedDelivery} done={false}/>
+            </div>
+          </div>
+        </div>
+
+        {/* Next steps */}
+        <div className="fade-up" style={{animationDelay:'300ms',background:'var(--espresso)',borderRadius:'var(--radius-lg)',padding:'32px 40px',display:'grid',gridTemplateColumns:'1fr auto',gap:'32px',alignItems:'center',marginBottom:'24px'}}>
+          <div>
+            <h3 style={{fontFamily:'var(--font-display)',fontSize:'1.3rem',fontWeight:300,color:'var(--cream)',marginBottom:'8px'}}>
+              Mientras esperás tu pedido…
+            </h3>
+            <p style={{fontFamily:'var(--font-body)',fontSize:'13px',color:'rgba(245,237,224,0.65)',lineHeight:1.7}}>
+              Seguinos en Instagram para inspirarte y descubrir nuevas piezas que complementen tu colección. Usá <strong style={{color:'var(--gold-light)'}}>#MiNook</strong> para mostrarnos tu rincón.
+            </p>
+          </div>
+          <div style={{display:'flex',gap:'10px',flexShrink:0}}>
+            <button style={{padding:'11px 20px',borderRadius:'var(--radius-pill)',border:'1.5px solid var(--gold-light)',background:'transparent',color:'var(--gold-light)',fontFamily:'var(--font-body)',fontSize:'12px',fontWeight:500,letterSpacing:'0.08em',textTransform:'uppercase',cursor:'pointer'}}>Instagram</button>
+            <button onClick={()=>window.location.href='index.html'} style={{padding:'11px 20px',borderRadius:'var(--radius-pill)',border:'none',background:'var(--gold)',color:'white',fontFamily:'var(--font-body)',fontSize:'12px',fontWeight:500,letterSpacing:'0.08em',textTransform:'uppercase',cursor:'pointer'}}>Seguir comprando</button>
+          </div>
+        </div>
+
+        {/* Help */}
+        <div className="fade-up" style={{animationDelay:'350ms',textAlign:'center',padding:'20px',background:'var(--warm-white)',borderRadius:'var(--radius-lg)',border:'1px solid var(--border)'}}>
+          <p style={{fontFamily:'var(--font-body)',fontSize:'13px',color:'var(--warm-gray)'}}>
+            ¿Tenés alguna pregunta sobre tu pedido? Escribinos a{' '}
+            <a href="mailto:hola@nookhome.com.ar" style={{color:'var(--gold)',textDecoration:'none',fontWeight:500}}>hola@nookhome.com.ar</a>
+            {' '}o por WhatsApp al{' '}
+            <a href="#" style={{color:'var(--gold)',textDecoration:'none',fontWeight:500}}>+54 11 5555-0000</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+<div id="root"></div>
+</body>
+</html>

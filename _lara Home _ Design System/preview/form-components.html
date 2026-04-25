@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--cream); padding: 22px; font-family: var(--font-body); }
+  .section { font-size: 9px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 10px; margin-top: 16px; }
+  .section:first-child { margin-top: 0; }
+  .field-group { margin-bottom: 14px; }
+  label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 5px; }
+  input, select, textarea {
+    width: 100%; padding: 10px 14px; border-radius: var(--radius-md);
+    border: 1.5px solid var(--border-strong); background: var(--warm-white);
+    font-family: var(--font-body); font-size: 14px; color: var(--espresso);
+    outline: none; transition: border-color 180ms ease, box-shadow 180ms ease;
+    -webkit-appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--gold); box-shadow: 0 0 0 3px var(--focus-ring);
+  }
+  input::placeholder { color: var(--warm-tan); }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .helper { font-size: 10px; color: var(--warm-gray); margin-top: 4px; }
+  .error-field input { border-color: var(--error); }
+  .error-msg { font-size: 10px; color: var(--error); margin-top: 4px; }
+</style>
+</head>
+<body>
+  <div class="section">Form Inputs</div>
+  <div class="row2">
+    <div class="field-group">
+      <label>Nombre</label>
+      <input type="text" placeholder="Tu nombre" value="Valentina">
+    </div>
+    <div class="field-group">
+      <label>Apellido</label>
+      <input type="text" placeholder="Tu apellido">
+    </div>
+  </div>
+  <div class="field-group">
+    <label>Email</label>
+    <input type="email" placeholder="hola@tuhogar.com">
+    <div class="helper">Nunca compartimos tu información.</div>
+  </div>
+  <div class="field-group error-field">
+    <label>Código postal</label>
+    <input type="text" placeholder="1234" value="ABCD">
+    <div class="error-msg">Ingresá un código postal válido.</div>
+  </div>
+  <div class="field-group">
+    <label>Provincia</label>
+    <select><option>Buenos Aires</option><option>Córdoba</option><option>Santa Fe</option></select>
+  </div>
+</body>
+</html>

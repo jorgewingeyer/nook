@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nook — Checkout</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--cream);font-family:var(--font-body);-webkit-font-smoothing:antialiased}
+  input,select{width:100%;padding:11px 14px;border:1.5px solid var(--border-strong);border-radius:var(--radius-md);font-family:var(--font-body);font-size:14px;color:var(--espresso);background:var(--warm-white);outline:none;transition:border-color 200ms,box-shadow 200ms}
+  input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,148,95,0.2)}
+  input::placeholder{color:var(--warm-tan)}
+  label{display:block;font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:5px}
+</style>
+</head>
+<body>
+<script type="text/babel">
+const { useState } = React;
+
+const CART_ITEMS = [
+  { id:1, name:'Lámpara Arco Dorada', category:'Iluminación', price:89900, qty:1, image:'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=200&h=200&fit=crop&q=80' },
+  { id:2, name:'Jarrón Cerámica Osaka', category:'Jarrones', price:62500, qty:2, image:'https://images.unsplash.com/photo-1616047006789-b7af5afb8c20?w=200&h=200&fit=crop&q=80' },
+  { id:3, name:'Vela Cedro & Sándalo', category:'Velas', price:18900, qty:1, image:'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=200&h=200&fit=crop&q=80' },
+];
+
+const NookLogo = () => (
+  <a href="index.html" style={{textDecoration:'none',display:'flex',alignItems:'center',gap:'9px'}}>
+    <svg width="28" height="34" viewBox="0 0 36 48" fill="none">
+      <path d="M4 44 L4 20 Q4 4 18 4 Q32 4 32 20 L32 44" stroke="#B8945F" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M11 44 L11 22 Q11 12 18 12 Q25 12 25 22 L25 44" stroke="#B8945F" strokeWidth="1.2" strokeLinecap="round" opacity="0.4"/>
+      <line x1="0" y1="44" x2="36" y2="44" stroke="#B8945F" strokeWidth="1.8" strokeLinecap="round"/>
+    </svg>
+    <span style={{fontFamily:'var(--font-display)',fontSize:'24px',fontWeight:400,letterSpacing:'2px',color:'var(--espresso)',lineHeight:1}}>nook</span>
+  </a>
+);
+
+const StepIndicator = ({ current }) => {
+  const steps = ['Carrito','Envío','Pago'];
+  return (
+    <div style={{display:'flex',alignItems:'center',gap:'0',marginBottom:'40px'}}>
+      {steps.map((s,i) => (
+        <React.Fragment key={s}>
+          <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:'6px'}}>
+            <div style={{width:'32px',height:'32px',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'var(--font-body)',fontSize:'13px',fontWeight:600,
+              background: i < current ? 'var(--gold)' : i===current ? 'var(--espresso)' : 'transparent',
+              color: i <= current ? 'white' : 'var(--warm-gray)',
+              border: i > current ? '1.5px solid var(--border-strong)' : 'none',
+              transition:'all 300ms'
+            }}>{i < current ? '✓' : i+1}</div>
+            <span style={{fontFamily:'var(--font-body)',fontSize:'11px',fontWeight: i===current?600:400,letterSpacing:'0.06em',textTransform:'uppercase',color: i===current?'var(--espresso)':'var(--warm-gray)'}}>{s}</span>
+          </div>
+          {i < steps.length-1 && <div style={{flex:1,height:'1.5px',background: i<current?'var(--gold)':'var(--border)',margin:'0 8px',marginBottom:'22px',transition:'background 300ms'}}/>}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+};
+
+const OrderSummary = ({ items, step }) => {
+  const subtotal = items.reduce((s,i)=>s+i.price*i.qty,0);
+  const shipping = subtotal >= 50000 ? 0 : 3500;
+  const total = subtotal + shipping;
+  return (
+    <div style={{background:'var(--warm-white)',borderRadius:'var(--radius-lg)',border:'1px solid var(--border)',padding:'28px',position:'sticky',top:'24px'}}>
+      <h3 style={{fontFamily:'var(--font-display)',fontSize:'1.2rem',fontWeight:400,color:'var(--espresso)',marginBottom:'20px'}}>Resumen del pedido</h3>
+      <div style={{display:'flex',flexDirection:'column',gap:'14px',marginBottom:'20px',paddingBottom:'20px',borderBottom:'1px solid var(--border)'}}>
+        {items.map(item => (
+          <div key={item.id} style={{display:'flex',gap:'12px',alignItems:'center'}}>
+            <div style={{position:'relative',flexShrink:0}}>
+              <div style={{width:'56px',height:'56px',borderRadius:'var(--radius-sm)',overflow:'hidden',background:'var(--parchment)'}}>
+                <img src={item.image} alt={item.name} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+              </div>
+              <span style={{position:'absolute',top:'-6px',right:'-6px',background:'var(--espresso)',color:'white',width:'18px',height:'18px',borderRadius:'50%',fontSize:'10px',fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center'}}>{item.qty}</span>
+            </div>
+            <div style={{flex:1}}>
+              <div style={{fontFamily:'var(--font-display)',fontSize:'0.9rem',color:'var(--espresso)',lineHeight:1.3}}>{item.name}</div>
+              <div style={{fontFamily:'var(--font-body)',fontSize:'10px',color:'var(--warm-gray)',marginTop:'2px',letterSpacing:'0.08em',textTransform:'uppercase'}}>{item.category}</div>
+            </div>
+            <div style={{fontFamily:'var(--font-body)',fontSize:'14px',fontWeight:500,color:'var(--espresso)',flexShrink:0}}>${(item.price*item.qty).toLocaleString('es-AR')}</div>
+          </div>
+        ))}
+      </div>
+      {/* Coupon */}
+      <div style={{display:'flex',gap:'8px',marginBottom:'20px',paddingBottom:'20px',borderBottom:'1px solid var(--border)'}}>
+        <input placeholder="Código de descuento" style={{flex:1,fontSize:'13px',padding:'9px 12px'}}/>
+        <button style={{padding:'9px 16px',borderRadius:'var(--radius-md)',border:'1.5px solid var(--border-strong)',background:'transparent',fontFamily:'var(--font-body)',fontSize:'12px',fontWeight:500,cursor:'pointer',color:'var(--espresso)',letterSpacing:'0.06em',whiteSpace:'nowrap'}}>Aplicar</button>
+      </div>
+      {/* Totals */}
+      <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
+        <div style={{display:'flex',justifyContent:'space-between'}}>
+          <span style={{fontFamily:'var(--font-body)',fontSize:'13px',color:'var(--warm-gray)'}}>Subtotal</span>
+          <span style={{fontFamily:'var(--font-body)',fontSize:'13px',color:'var(--espresso)'}}>${subtotal.toLocaleString('es-AR')}</span>
+        </div>
+        <div style={{display:'flex',justifyContent:'space-between'}}>
+          <span style={{fontFamily:'var(--font-body)',fontSize:'13px',color:'var(--warm-gray)'}}>Envío</span>
+          <span style={{fontFamily:'var(--font-body)',fontSize:'13px',color: shipping===0?'var(--sage)':'var(--espresso)'}}>{shipping===0?'Gratis':`$${shipping.toLocaleString('es-AR')}`}</span>
+        </div>
+        <div style={{display:'flex',justifyContent:'space-between',paddingTop:'10px',borderTop:'1px solid var(--border)'}}>
+          <span style={{fontFamily:'var(--font-body)',fontSize:'14px',fontWeight:600,color:'var(--espresso)'}}>Total</span>
+          <span style={{fontFamily:'var(--font-display)',fontSize:'1.3rem',fontWeight:500,color:'var(--espresso)'}}>${total.toLocaleString('es-AR')}</span>
+        </div>
+      </div>
+      {/* Trust */}
+      <div style={{marginTop:'20px',paddingTop:'16px',borderTop:'1px solid var(--border)',display:'flex',gap:'16px',justifyContent:'center'}}>
+        {['🔒 Pago seguro','↩ 30 días'].map(t=>(
+          <span key={t} style={{fontFamily:'var(--font-body)',fontSize:'10px',color:'var(--warm-gray)',letterSpacing:'0.04em'}}>{t}</span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const Field = ({ label, placeholder, type='text', half=false, value, onChange }) => (
+  <div style={{gridColumn: half?'span 1':'span 2'}}>
+    <label>{label}</label>
+    <input type={type} placeholder={placeholder} value={value||''} onChange={e=>onChange?.(e.target.value)}/>
+  </div>
+);
+
+const Step1Cart = ({ items, onNext, onUpdateQty, onRemove }) => (
+  <div>
+    <h2 style={{fontFamily:'var(--font-display)',fontSize:'1.6rem',fontWeight:300,color:'var(--espresso)',marginBottom:'24px'}}>Tu carrito</h2>
+    <div style={{display:'flex',flexDirection:'column',gap:'0',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',overflow:'hidden',background:'var(--warm-white)',marginBottom:'24px'}}>
+      {items.map((item,i) => (
+        <div key={item.id} style={{display:'grid',gridTemplateColumns:'72px 1fr auto',gap:'16px',padding:'20px 24px',borderBottom: i<items.length-1?'1px solid var(--border)':'none',alignItems:'center'}}>
+          <div style={{width:'72px',height:'72px',borderRadius:'var(--radius-sm)',overflow:'hidden',background:'var(--parchment)'}}>
+            <img src={item.image} alt={item.name} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+          </div>
+          <div>
+            <div style={{fontFamily:'var(--font-body)',fontSize:'10px',letterSpacing:'0.12em',textTransform:'uppercase',color:'var(--warm-gray)',marginBottom:'3px'}}>{item.category}</div>
+            <div style={{fontFamily:'var(--font-display)',fontSize:'1rem',color:'var(--espresso)',marginBottom:'8px',lineHeight:1.3}}>{item.name}</div>
+            <div style={{display:'flex',alignItems:'center',gap:'0',border:'1.5px solid var(--border-strong)',borderRadius:'var(--radius-pill)',width:'fit-content',overflow:'hidden'}}>
+              <button onClick={()=>onUpdateQty(item.id,Math.max(1,item.qty-1))} style={{width:'32px',height:'32px',background:'none',border:'none',cursor:'pointer',fontSize:'16px',color:'var(--espresso)'}}>−</button>
+              <span style={{minWidth:'28px',textAlign:'center',fontFamily:'var(--font-body)',fontSize:'13px',fontWeight:500}}>{item.qty}</span>
+              <button onClick={()=>onUpdateQty(item.id,item.qty+1)} style={{width:'32px',height:'32px',background:'none',border:'none',cursor:'pointer',fontSize:'16px',color:'var(--espresso)'}}>+</button>
+            </div>
+          </div>
+          <div style={{textAlign:'right'}}>
+            <div style={{fontFamily:'var(--font-body)',fontSize:'15px',fontWeight:600,color:'var(--espresso)',marginBottom:'8px'}}>${(item.price*item.qty).toLocaleString('es-AR')}</div>
+            <button onClick={()=>onRemove(item.id)} style={{background:'none',border:'none',cursor:'pointer',fontFamily:'var(--font-body)',fontSize:'11px',color:'var(--warm-gray)',letterSpacing:'0.04em',borderBottom:'1px solid var(--border)'}}>Eliminar</button>
+          </div>
+        </div>
+      ))}
+    </div>
+    <button onClick={onNext} style={{width:'100%',padding:'15px',borderRadius:'var(--radius-pill)',border:'none',background:'var(--espresso)',color:'var(--cream)',fontFamily:'var(--font-body)',fontSize:'13px',fontWeight:500,letterSpacing:'0.1em',textTransform:'uppercase',cursor:'pointer'}}>
+      Continuar con el envío →
+    </button>
+  </div>
+);
+
+const Step2Shipping = ({ onNext, onBack, data, setData }) => {
+  const provinces = ['Buenos Aires','Córdoba','Santa Fe','Mendoza','Tucumán','Entre Ríos','Salta','Misiones','Chaco','Corrientes'];
+  return (
+    <div>
+      <h2 style={{fontFamily:'var(--font-display)',fontSize:'1.6rem',fontWeight:300,color:'var(--espresso)',marginBottom:'24px'}}>Información de envío</h2>
+      <div style={{background:'var(--warm-white)',borderRadius:'var(--radius-lg)',border:'1px solid var(--border)',padding:'28px',marginBottom:'20px'}}>
+        <h3 style={{fontFamily:'var(--font-body)',fontSize:'11px',fontWeight:600,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--warm-gray)',marginBottom:'20px'}}>Datos personales</h3>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'14px',marginBottom:'24px'}}>
+          <Field label="Nombre" placeholder="Tu nombre" half/>
+          <Field label="Apellido" placeholder="Tu apellido" half/>
+          <Field label="Email" placeholder="hola@tuhogar.com" type="email"/>
+          <Field label="Teléfono" placeholder="+54 11 0000-0000" type="tel"/>
+        </div>
+        <h3 style={{fontFamily:'var(--font-body)',fontSize:'11px',fontWeight:600,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--warm-gray)',marginBottom:'20px'}}>Dirección de entrega</h3>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'14px'}}>
+          <div style={{gridColumn:'span 2'}}>
+            <label>Dirección</label>
+            <input placeholder="Av. Ejemplo 1234, Piso 5, Dpto B"/>
+          </div>
+          <div style={{gridColumn:'span 1'}}>
+            <label>Ciudad</label>
+            <input placeholder="Ciudad"/>
+          </div>
+          <div style={{gridColumn:'span 1'}}>
+            <label>Código Postal</label>
+            <input placeholder="1234"/>
+          </div>
+          <div style={{gridColumn:'span 2'}}>
+            <label>Provincia</label>
+            <select style={{width:'100%',padding:'11px 14px',border:'1.5px solid var(--border-strong)',borderRadius:'var(--radius-md)',fontFamily:'var(--font-body)',fontSize:'14px',color:'var(--espresso)',background:'var(--warm-white)',outline:'none'}}>
+              <option value="">Seleccioná tu provincia</option>
+              {provinces.map(p=><option key={p}>{p}</option>)}
+            </select>
+          </div>
+        </div>
+      </div>
+      {/* Shipping options */}
+      <div style={{background:'var(--warm-white)',borderRadius:'var(--radius-lg)',border:'1px solid var(--border)',padding:'24px',marginBottom:'20px'}}>
+        <h3 style={{fontFamily:'var(--font-body)',fontSize:'11px',fontWeight:600,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--warm-gray)',marginBottom:'16px'}}>Método de envío</h3>
+        {[
+          {id:'standard',label:'Envío estándar',desc:'3–5 días hábiles',price:'Gratis'},
+          {id:'express',label:'Envío express',desc:'1–2 días hábiles',price:'$4.900'},
+        ].map((opt,i) => (
+          <label key={opt.id} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px',borderRadius:'var(--radius-md)',border:`1.5px solid ${i===0?'var(--gold)':'var(--border)'}`,background: i===0?'rgba(184,148,95,0.06)':'transparent',cursor:'pointer',marginBottom: i===0?'10px':'0'}}>
+            <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
+              <input type="radio" name="shipping" defaultChecked={i===0} style={{accentColor:'var(--gold)',width:'16px',height:'16px'}}/>
+              <div>
+                <div style={{fontFamily:'var(--font-body)',fontSize:'13px',fontWeight:500,color:'var(--espresso)'}}>{opt.label}</div>
+                <div style={{fontFamily:'var(--font-body)',fontSize:'11px',color:'var(--warm-gray)',marginTop:'2px'}}>{opt.desc}</div>
+              </div>
+            </div>
+            <span style={{fontFamily:'var(--font-body)',fontSize:'14px',fontWeight:600,color: i===0?'var(--sage)':'var(--espresso)'}}>{opt.price}</span>
+          </label>
+        ))}
+      </div>
+      <div style={{display:'flex',gap:'12px'}}>
+        <button onClick={onBack} style={{flex:1,padding:'14px',borderRadius:'var(--radius-pill)',border:'1.5px solid var(--border-strong)',background:'transparent',color:'var(--espresso)',fontFamily:'var(--font-body)',fontSize:'13px',fontWeight:500,letterSpacing:'0.08em',textTransform:'uppercase',cursor:'pointer'}}>← Volver</button>
+        <button onClick={onNext} style={{flex:2,padding:'14px',borderRadius:'var(--radius-pill)',border:'none',background:'var(--espresso)',color:'var(--cream)',fontFamily:'var(--font-body)',fontSize:'13px',fontWeight:500,letterSpacing:'0.1em',textTransform:'uppercase',cursor:'pointer'}}>Continuar con el pago →</button>
+      </div>
+    </div>
+  );
+};
+
+const Step3Payment = ({ onNext, onBack, items }) => {
+  const [method, setMethod] = useState('card');
+  const subtotal = items.reduce((s,i)=>s+i.price*i.qty,0);
+  const methods = [{id:'card',label:'Tarjeta de crédito / débito'},{id:'mp',label:'Mercado Pago'},{id:'transfer',label:'Transferencia bancaria'}];
+  return (
+    <div>
+      <h2 style={{fontFamily:'var(--font-display)',fontSize:'1.6rem',fontWeight:300,color:'var(--espresso)',marginBottom:'24px'}}>Método de pago</h2>
+      <div style={{background:'var(--warm-white)',borderRadius:'var(--radius-lg)',border:'1px solid var(--border)',padding:'24px',marginBottom:'20px'}}>
+        <div style={{display:'flex',flexDirection:'column',gap:'10px',marginBottom:'24px'}}>
+          {methods.map(m => (
+            <label key={m.id} onClick={()=>setMethod(m.id)} style={{display:'flex',alignItems:'center',gap:'12px',padding:'14px',borderRadius:'var(--radius-md)',border:`1.5px solid ${method===m.id?'var(--gold)':'var(--border)'}`,background: method===m.id?'rgba(184,148,95,0.06)':'transparent',cursor:'pointer',transition:'all 200ms'}}>
+              <input type="radio" name="payment" checked={method===m.id} onChange={()=>setMethod(m.id)} style={{accentColor:'var(--gold)',width:'16px',height:'16px'}}/>
+              <span style={{fontFamily:'var(--font-body)',fontSize:'13px',fontWeight:500,color:'var(--espresso)'}}>{m.label}</span>
+            </label>
+          ))}
+        </div>
+        {method==='card' && (
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'14px'}}>
+            <div style={{gridColumn:'span 2'}}>
+              <label>Número de tarjeta</label>
+              <input placeholder="0000 0000 0000 0000"/>
+            </div>
+            <div>
+              <label>Nombre en la tarjeta</label>
+              <input placeholder="Como aparece en la tarjeta"/>
+            </div>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px'}}>
+              <div><label>Vencimiento</label><input placeholder="MM/AA"/></div>
+              <div><label>CVV</label><input placeholder="000"/></div>
+            </div>
+            <div style={{gridColumn:'span 2'}}>
+              <label>Cuotas</label>
+              <select style={{width:'100%',padding:'11px 14px',border:'1.5px solid var(--border-strong)',borderRadius:'var(--radius-md)',fontFamily:'var(--font-body)',fontSize:'14px',color:'var(--espresso)',background:'var(--warm-white)',outline:'none'}}>
+                <option>1 pago de ${subtotal.toLocaleString('es-AR')} (sin interés)</option>
+                <option>3 cuotas de ${Math.round(subtotal/3).toLocaleString('es-AR')} (sin interés)</option>
+                <option>6 cuotas de ${Math.round(subtotal/6).toLocaleString('es-AR')} (sin interés)</option>
+                <option>12 cuotas de ${Math.round(subtotal*1.2/12).toLocaleString('es-AR')}</option>
+              </select>
+            </div>
+          </div>
+        )}
+        {method==='mp' && (
+          <div style={{textAlign:'center',padding:'24px',background:'var(--parchment)',borderRadius:'var(--radius-md)'}}>
+            <div style={{fontFamily:'var(--font-body)',fontSize:'13px',color:'var(--warm-gray)',lineHeight:1.7}}>Al continuar serás redirigida al sitio seguro de Mercado Pago para completar tu compra.</div>
+          </div>
+        )}
+        {method==='transfer' && (
+          <div style={{padding:'16px',background:'var(--parchment)',borderRadius:'var(--radius-md)'}}>
+            <div style={{fontFamily:'var(--font-body)',fontSize:'12px',color:'var(--warm-gray)',lineHeight:1.8}}>
+              <strong style={{color:'var(--espresso)'}}>CBU:</strong> 0000003100099843001459<br/>
+              <strong style={{color:'var(--espresso)'}}>Alias:</strong> NOOK.HOME.TIENDA<br/>
+              <strong style={{color:'var(--espresso)'}}>CUIT:</strong> 30-12345678-9<br/>
+              <strong style={{color:'var(--espresso)'}}>Banco:</strong> Galicia<br/>
+              <em>Envianos el comprobante a hola@nookhome.com.ar</em>
+            </div>
+          </div>
+        )}
+      </div>
+      <div style={{background:'rgba(107,158,114,0.1)',borderRadius:'var(--radius-md)',border:'1px solid rgba(107,158,114,0.3)',padding:'12px 16px',display:'flex',alignItems:'center',gap:'10px',marginBottom:'20px'}}>
+        <span style={{fontSize:'16px'}}>🔒</span>
+        <span style={{fontFamily:'var(--font-body)',fontSize:'12px',color:'var(--espresso)'}}>Tu información de pago está cifrada con SSL de 256 bits. Nunca almacenamos tus datos de tarjeta.</span>
+      </div>
+      <div style={{display:'flex',gap:'12px'}}>
+        <button onClick={onBack} style={{flex:1,padding:'14px',borderRadius:'var(--radius-pill)',border:'1.5px solid var(--border-strong)',background:'transparent',color:'var(--espresso)',fontFamily:'var(--font-body)',fontSize:'13px',fontWeight:500,letterSpacing:'0.08em',textTransform:'uppercase',cursor:'pointer'}}>← Volver</button>
+        <button onClick={onNext} style={{flex:2,padding:'14px',borderRadius:'var(--radius-pill)',border:'none',background:'var(--gold)',color:'white',fontFamily:'var(--font-body)',fontSize:'13px',fontWeight:600,letterSpacing:'0.1em',textTransform:'uppercase',cursor:'pointer'}}>Confirmar y pagar →</button>
+      </div>
+    </div>
+  );
+};
+
+const App = () => {
+  const [step, setStep] = useState(0);
+  const [items, setItems] = useState(CART_ITEMS);
+  const updateQty = (id, qty) => setItems(prev=>prev.map(i=>i.id===id?{...i,qty}:i));
+  const removeItem = (id) => setItems(prev=>prev.filter(i=>i.id!==id));
+  const next = () => { if(step===2) window.location.href='order-confirmation.html'; else setStep(s=>s+1); };
+  const back = () => setStep(s=>s-1);
+
+  return (
+    <div style={{minHeight:'100vh',background:'var(--cream)'}}>
+      {/* Minimal header */}
+      <header style={{background:'var(--warm-white)',borderBottom:'1px solid var(--border)',padding:'0 48px',height:'64px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+        <NookLogo/>
+        <div style={{display:'flex',gap:'6px',alignItems:'center',fontFamily:'var(--font-body)',fontSize:'12px',color:'var(--warm-gray)'}}>
+          <span style={{fontSize:'14px'}}>🔒</span> Checkout seguro
+        </div>
+      </header>
+
+      <div style={{maxWidth:'1100px',margin:'0 auto',padding:'40px 48px',display:'grid',gridTemplateColumns:'1fr 400px',gap:'40px',alignItems:'start'}}>
+        <div>
+          <StepIndicator current={step}/>
+          {step===0 && <Step1Cart items={items} onNext={next} onUpdateQty={updateQty} onRemove={removeItem}/>}
+          {step===1 && <Step2Shipping onNext={next} onBack={back}/>}
+          {step===2 && <Step3Payment onNext={next} onBack={back} items={items}/>}
+        </div>
+        <OrderSummary items={items} step={step}/>
+      </div>
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+<div id="root"></div>
+</body>
+</html>

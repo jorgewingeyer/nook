@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--cream); padding: 20px; font-family: var(--font-body); }
+  .section { font-size: 9px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 10px; margin-top: 16px; }
+  .section:first-child { margin-top: 0; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+  /* Badges */
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; border-radius: var(--radius-pill); font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+  .badge-gold { background: var(--gold); color: white; }
+  .badge-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold-dark); }
+  .badge-blush { background: var(--blush-light); color: var(--stone); }
+  .badge-sage { background: var(--sage-light); color: #3D5C40; }
+  .badge-dark { background: var(--espresso); color: var(--gold-light); }
+  .badge-neutral { background: var(--parchment); color: var(--warm-gray); }
+  /* Tags */
+  .tag { display: inline-flex; padding: 3px 10px; border-radius: var(--radius-sm); font-size: 10px; font-weight: 400; color: var(--warm-gray); border: 1px solid var(--border); background: var(--warm-white); cursor: pointer; transition: all 180ms; }
+  .tag:hover, .tag-active { background: var(--espresso); color: var(--cream); border-color: var(--espresso); }
+  /* Trust badges */
+  .trust { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: var(--radius-md); background: var(--warm-white); border: 1px solid var(--border); font-size: 11px; color: var(--espresso); }
+  .trust-icon { font-size: 14px; color: var(--gold); }
+</style>
+</head>
+<body>
+  <div class="section">Badges</div>
+  <div class="row">
+    <span class="badge badge-gold">Nuevo ingreso</span>
+    <span class="badge badge-outline">Exclusivo</span>
+    <span class="badge badge-blush">Más vendido</span>
+    <span class="badge badge-sage">Sustentable</span>
+    <span class="badge badge-dark">−20%</span>
+    <span class="badge badge-neutral">Sin stock</span>
+  </div>
+  <div class="section">Category Tags</div>
+  <div class="row">
+    <span class="tag tag-active">Todos</span>
+    <span class="tag">Iluminación</span>
+    <span class="tag">Textiles</span>
+    <span class="tag">Decoración</span>
+    <span class="tag">Muebles</span>
+    <span class="tag">Outdoor</span>
+  </div>
+  <div class="section">Trust Signals</div>
+  <div class="row">
+    <div class="trust"><span class="trust-icon">✓</span> Envío gratis +$50.000</div>
+    <div class="trust"><span class="trust-icon">↩</span> 30 días de devolución</div>
+    <div class="trust"><span class="trust-icon">🔒</span> Pago 100% seguro</div>
+  </div>
+</body>
+</html>
