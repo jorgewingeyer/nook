@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, Minus, Plus, ShoppingCart } from "lucide-react";
+import { Loader2, Minus, Plus, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { addToCartAction } from "@/app/(shop)/carrito/cart.action";
 
@@ -33,46 +33,48 @@ export function AddToCartButton({ productId, stock }: AddToCartButtonProps) {
 
   if (outOfStock) {
     return (
-      <Button disabled size="lg" className="w-full sm:w-auto">
+      <Button disabled variant="outline" size="lg" className="w-full cursor-not-allowed opacity-60">
         Sin stock
       </Button>
     );
   }
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-      <div className="flex items-center gap-2 rounded-md border">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="h-10 w-10 shrink-0"
-          onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-          disabled={quantity <= 1}
-          aria-label="Reducir cantidad"
-        >
-          <Minus className="h-4 w-4" />
-        </Button>
-        <span className="w-8 text-center text-sm font-medium">{quantity}</span>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="h-10 w-10 shrink-0"
-          onClick={() => setQuantity((q) => Math.min(stock, q + 1))}
-          disabled={quantity >= stock}
-          aria-label="Aumentar cantidad"
-        >
-          <Plus className="h-4 w-4" />
-        </Button>
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center gap-3">
+        <div className="flex items-center rounded-full border border-sand/70 bg-warm-white">
+          <button
+            type="button"
+            onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+            disabled={quantity <= 1}
+            aria-label="Reducir cantidad"
+            className="flex h-9 w-9 items-center justify-center text-espresso transition-colors hover:text-gold disabled:opacity-40"
+          >
+            <Minus className="h-3.5 w-3.5" strokeWidth={1.5} />
+          </button>
+          <span className="min-w-[2rem] text-center text-sm font-medium text-espresso">
+            {quantity}
+          </span>
+          <button
+            type="button"
+            onClick={() => setQuantity((q) => Math.min(stock, q + 1))}
+            disabled={quantity >= stock}
+            aria-label="Aumentar cantidad"
+            className="flex h-9 w-9 items-center justify-center text-espresso transition-colors hover:text-gold disabled:opacity-40"
+          >
+            <Plus className="h-3.5 w-3.5" strokeWidth={1.5} />
+          </button>
+        </div>
+        <span className="text-xs text-warm-gray">{stock} disponibles</span>
       </div>
-      <Button size="lg" onClick={handleAdd} disabled={isPending} className="flex-1 sm:flex-none">
+
+      <Button size="lg" onClick={handleAdd} disabled={isPending} className="w-full">
         {isPending ? (
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.5} />
         ) : (
-          <ShoppingCart className="mr-2 h-4 w-4" />
+          <ShoppingBag className="h-4 w-4" strokeWidth={1.5} />
         )}
-        Agregar al carrito
+        {isPending ? "Agregando..." : "Agregar al carrito"}
       </Button>
     </div>
   );

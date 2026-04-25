@@ -3,15 +3,19 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Zap, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { createOrderAction } from "@/app/(shop)/checkout/checkout.action";
 import { SHIPPING_LABELS, type ShippingMethod } from "@/lib/checkout-utils";
 import { formatCurrency } from "@/lib/utils";
 import type { CartData } from "@/app/(shop)/carrito/cart.action";
+
+const SHIPPING_ICONS: Record<ShippingMethod, React.ReactNode> = {
+  standard: <Truck className="h-4 w-4 shrink-0 text-gold" strokeWidth={1.5} />,
+  express: <Zap className="h-4 w-4 shrink-0 text-gold" strokeWidth={1.5} />,
+};
 
 export function CheckoutForm({ cart }: { cart: CartData }) {
   const router = useRouter();
@@ -43,17 +47,21 @@ export function CheckoutForm({ cart }: { cart: CartData }) {
   return (
     <div className="grid gap-8 lg:grid-cols-5">
       {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-6 lg:col-span-3">
+      <form onSubmit={handleSubmit} className="space-y-5 lg:col-span-3">
         {/* Contact */}
-        <div className="space-y-4 rounded-lg border p-5">
-          <h2 className="font-semibold">Datos de contacto</h2>
-          <div className="space-y-2">
-            <Label htmlFor="customerName">Nombre completo *</Label>
+        <section className="space-y-4 rounded-lg border border-sand/60 bg-warm-white p-5">
+          <h2 className="font-medium text-espresso">Datos de contacto</h2>
+          <div className="space-y-1.5">
+            <Label htmlFor="customerName" className="text-warm-gray">
+              Nombre completo *
+            </Label>
             <Input id="customerName" name="customerName" required placeholder="Juan García" />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="customerEmail">Email *</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="customerEmail" className="text-warm-gray">
+                Email *
+              </Label>
               <Input
                 id="customerEmail"
                 name="customerEmail"
@@ -62,8 +70,10 @@ export function CheckoutForm({ cart }: { cart: CartData }) {
                 placeholder="juan@ejemplo.com"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="customerPhone">Teléfono</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="customerPhone" className="text-warm-gray">
+                Teléfono
+              </Label>
               <Input
                 id="customerPhone"
                 name="customerPhone"
@@ -72,13 +82,15 @@ export function CheckoutForm({ cart }: { cart: CartData }) {
               />
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Shipping address */}
-        <div className="space-y-4 rounded-lg border p-5">
-          <h2 className="font-semibold">Dirección de envío</h2>
-          <div className="space-y-2">
-            <Label htmlFor="shippingAddress">Calle y número *</Label>
+        <section className="space-y-4 rounded-lg border border-sand/60 bg-warm-white p-5">
+          <h2 className="font-medium text-espresso">Dirección de envío</h2>
+          <div className="space-y-1.5">
+            <Label htmlFor="shippingAddress" className="text-warm-gray">
+              Calle y número *
+            </Label>
             <Input
               id="shippingAddress"
               name="shippingAddress"
@@ -87,12 +99,16 @@ export function CheckoutForm({ cart }: { cart: CartData }) {
             />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="shippingCity">Ciudad *</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="shippingCity" className="text-warm-gray">
+                Ciudad *
+              </Label>
               <Input id="shippingCity" name="shippingCity" required placeholder="Buenos Aires" />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="shippingProvince">Provincia *</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="shippingProvince" className="text-warm-gray">
+                Provincia *
+              </Label>
               <Input
                 id="shippingProvince"
                 name="shippingProvince"
@@ -101,77 +117,100 @@ export function CheckoutForm({ cart }: { cart: CartData }) {
               />
             </div>
           </div>
-          <div className="space-y-2 sm:w-40">
-            <Label htmlFor="shippingZip">Código postal *</Label>
+          <div className="space-y-1.5 sm:w-40">
+            <Label htmlFor="shippingZip" className="text-warm-gray">
+              Código postal *
+            </Label>
             <Input id="shippingZip" name="shippingZip" required placeholder="C1043" />
           </div>
-        </div>
+        </section>
 
         {/* Shipping method */}
-        <div className="space-y-3 rounded-lg border p-5">
-          <h2 className="font-semibold">Método de envío</h2>
+        <section className="space-y-3 rounded-lg border border-sand/60 bg-warm-white p-5">
+          <h2 className="font-medium text-espresso">Método de envío</h2>
           {(Object.keys(SHIPPING_LABELS) as ShippingMethod[]).map((method) => {
             const { label, description } = SHIPPING_LABELS[method];
+            const isSelected = shippingMethod === method;
             return (
               <label
                 key={method}
                 className={`flex cursor-pointer items-center gap-4 rounded-lg border p-4 transition-colors ${
-                  shippingMethod === method ? "border-primary bg-primary/5" : "hover:bg-muted/50"
+                  isSelected
+                    ? "border-gold/50 bg-gold-lighter/30"
+                    : "border-sand/60 hover:border-sand/80 hover:bg-parchment/30"
                 }`}
               >
                 <input
                   type="radio"
                   name="shippingMethod"
                   value={method}
-                  checked={shippingMethod === method}
+                  checked={isSelected}
                   onChange={() => setShippingMethod(method)}
-                  className="h-4 w-4"
+                  className="sr-only"
                 />
+                <div
+                  className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
+                    isSelected ? "border-gold bg-gold" : "border-sand/70"
+                  }`}
+                >
+                  {isSelected && <div className="h-1.5 w-1.5 rounded-full bg-cream" />}
+                </div>
+                {SHIPPING_ICONS[method]}
                 <div className="flex-1">
-                  <p className="text-sm font-medium">{label}</p>
-                  <p className="text-xs text-muted-foreground">{description}</p>
+                  <p className="text-sm font-medium text-espresso">{label}</p>
+                  <p className="text-xs text-warm-gray">{description}</p>
                 </div>
               </label>
             );
           })}
-        </div>
+        </section>
 
         <Button type="submit" size="lg" disabled={isPending} className="w-full">
-          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
           {isPending ? "Procesando..." : `Ir a pagar ${formatCurrency(total)}`}
         </Button>
       </form>
 
       {/* Order summary */}
       <aside className="lg:col-span-2">
-        <div className="sticky top-24 space-y-4 rounded-lg border p-5">
-          <h2 className="font-semibold">Resumen del pedido</h2>
+        <div className="sticky top-24 rounded-lg border border-sand/60 bg-warm-white p-5">
+          <h2 className="mb-4 font-medium text-espresso">Resumen del pedido</h2>
           <div className="space-y-3">
             {cart.items.map((item) => (
               <div key={item.id} className="flex items-start justify-between gap-2 text-sm">
-                <span className="flex-1 leading-tight">
+                <span className="flex-1 leading-tight text-warm-gray">
                   {item.name}
-                  <span className="ml-1 text-muted-foreground">×{item.quantity}</span>
+                  <span className="ml-1 font-medium text-espresso">×{item.quantity}</span>
                 </span>
-                <span className="shrink-0 font-medium">{formatCurrency(item.subtotal)}</span>
+                <span className="shrink-0 font-medium text-espresso">
+                  {formatCurrency(item.subtotal)}
+                </span>
               </div>
             ))}
           </div>
-          <Separator />
+          <div className="my-4 border-t border-sand/60" />
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Subtotal</span>
-              <span>{formatCurrency(cart.subtotal)}</span>
+              <span className="text-warm-gray">Subtotal</span>
+              <span className="text-espresso">{formatCurrency(cart.subtotal)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Envío</span>
-              <span>{shippingCost === 0 ? "Gratis" : formatCurrency(shippingCost)}</span>
+              <span className="text-warm-gray">Envío</span>
+              <span className="text-espresso">
+                {shippingCost === 0 ? (
+                  <span className="font-medium text-elara-success">Gratis</span>
+                ) : (
+                  formatCurrency(shippingCost)
+                )}
+              </span>
             </div>
-            <Separator />
-            <div className="flex justify-between text-base font-semibold">
-              <span>Total</span>
-              <span>{formatCurrency(total)}</span>
-            </div>
+          </div>
+          <div className="my-4 border-t border-sand/60" />
+          <div className="flex justify-between">
+            <span className="font-medium text-espresso">Total</span>
+            <span className="font-serif text-xl font-light text-espresso">
+              {formatCurrency(total)}
+            </span>
           </div>
         </div>
       </aside>

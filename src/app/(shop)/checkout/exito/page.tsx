@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { CheckCircle, Package } from "lucide-react";
+import { CheckCircle2, Package, MapPin, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { getOrderStatusConfig } from "@/lib/order-utils";
@@ -23,81 +22,104 @@ export default async function ExitoPage({ searchParams }: PageProps) {
   const { label, variant } = getOrderStatusConfig(order.paymentStatus);
 
   return (
-    <div className="container mx-auto max-w-2xl px-4 py-12 space-y-8">
+    <div className="container mx-auto max-w-2xl px-4 py-12">
       {/* Success header */}
-      <div className="text-center space-y-3">
-        <div className="flex justify-center">
-          <CheckCircle className="h-16 w-16 text-green-500" />
+      <div className="mb-8 text-center">
+        <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-sage-light/40">
+          <CheckCircle2 className="h-10 w-10 text-elara-success" strokeWidth={1.5} />
         </div>
-        <h1 className="text-2xl font-bold">¡Pedido recibido!</h1>
-        <p className="text-muted-foreground">
+        <h1 className="font-serif text-3xl font-light text-espresso">¡Pedido recibido!</h1>
+        <p className="mt-2 text-sm text-warm-gray">
           Gracias por tu compra. Te confirmaremos el envío por email.
         </p>
       </div>
 
       {/* Order card */}
-      <div className="rounded-xl border p-6 space-y-5">
+      <div className="space-y-5 rounded-xl border border-sand/60 bg-warm-white p-6">
+        {/* Order number + status */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs text-muted-foreground uppercase tracking-wide">Número de pedido</p>
-            <p className="mt-0.5 font-mono text-lg font-bold">{order.orderNumber}</p>
+            <p className="text-xs font-medium uppercase tracking-widest text-warm-gray">
+              Número de pedido
+            </p>
+            <p className="mt-0.5 font-mono text-lg font-semibold text-espresso">
+              {order.orderNumber}
+            </p>
           </div>
           <Badge variant={variant}>{label}</Badge>
         </div>
 
-        <Separator />
+        <div className="border-t border-sand/60" />
 
         {/* Items */}
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {order.items.map((item) => (
             <div key={item.id} className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">
+              <span className="text-warm-gray">
                 {item.productName}{" "}
-                <span className="font-medium text-foreground">×{item.quantity}</span>
+                <span className="font-medium text-espresso">×{item.quantity}</span>
               </span>
-              <span className="font-medium">{formatCurrency(item.totalPrice)}</span>
+              <span className="font-medium text-espresso">{formatCurrency(item.totalPrice)}</span>
             </div>
           ))}
         </div>
 
-        <Separator />
+        <div className="border-t border-sand/60" />
 
-        <div className="space-y-1.5 text-sm">
+        {/* Totals */}
+        <div className="space-y-2 text-sm">
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Subtotal</span>
-            <span>{formatCurrency(order.subtotal)}</span>
+            <span className="text-warm-gray">Subtotal</span>
+            <span className="text-espresso">{formatCurrency(order.subtotal)}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Envío</span>
-            <span>{order.shippingCost === 0 ? "Gratis" : formatCurrency(order.shippingCost)}</span>
-          </div>
-          <Separator />
-          <div className="flex justify-between font-semibold text-base">
-            <span>Total</span>
-            <span>{formatCurrency(order.total)}</span>
+            <span className="text-warm-gray">Envío</span>
+            <span className="text-espresso">
+              {order.shippingCost === 0 ? (
+                <span className="font-medium text-elara-success">Gratis</span>
+              ) : (
+                formatCurrency(order.shippingCost)
+              )}
+            </span>
           </div>
         </div>
 
-        <Separator />
+        <div className="border-t border-sand/60" />
 
-        {/* Shipping info */}
-        <div className="space-y-1 text-sm">
-          <div className="flex items-center gap-1.5 font-medium">
-            <Package className="h-4 w-4" />
-            Dirección de entrega
+        <div className="flex justify-between">
+          <span className="font-medium text-espresso">Total</span>
+          <span className="font-serif text-xl font-light text-espresso">
+            {formatCurrency(order.total)}
+          </span>
+        </div>
+
+        <div className="border-t border-sand/60" />
+
+        {/* Delivery info */}
+        <div className="space-y-2.5 text-sm text-warm-gray">
+          <div className="flex items-start gap-2.5">
+            <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold" strokeWidth={1.5} />
+            <div>
+              <p className="font-medium text-espresso">{order.customerName}</p>
+              <p>
+                {order.shippingAddress}, {order.shippingCity}, {order.shippingProvince} (
+                {order.shippingZip})
+              </p>
+            </div>
           </div>
-          <p className="text-muted-foreground">
-            {order.customerName} — {order.shippingAddress}, {order.shippingCity},{" "}
-            {order.shippingProvince} ({order.shippingZip})
-          </p>
-          <p className="text-muted-foreground">Email: {order.customerEmail}</p>
-          <p className="mt-1 text-xs">
-            Pedido realizado el {formatDate(order.createdAt as Date)}
-          </p>
+          <div className="flex items-center gap-2.5">
+            <Mail className="h-4 w-4 shrink-0 text-gold" strokeWidth={1.5} />
+            <span>{order.customerEmail}</span>
+          </div>
+          <div className="flex items-center gap-2.5">
+            <Package className="h-4 w-4 shrink-0 text-gold" strokeWidth={1.5} />
+            <span>Pedido realizado el {formatDate(order.createdAt as Date)}</span>
+          </div>
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 sm:flex-row">
+      {/* CTAs */}
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row">
         <Button asChild size="lg" variant="outline" className="flex-1">
           <Link
             href={`/pedido?numero=${encodeURIComponent(order.orderNumber)}&email=${encodeURIComponent(order.customerEmail)}`}

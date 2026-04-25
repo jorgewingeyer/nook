@@ -36,13 +36,12 @@ export default function LoginPage() {
   return (
     <div className="space-y-7">
       <div className="text-center">
-        <h1 className="font-serif text-3xl font-light text-espresso">Nook</h1>
-        <p className="mt-2 text-sm text-warm-gray">Ingresá a tu cuenta</p>
+        <p className="font-sans text-sm text-warm-gray">Ingresá a tu cuenta de administración</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
-          <label htmlFor="email" className="block text-sm font-medium text-warm-gray">
+          <label htmlFor="email" className="block font-sans text-sm font-medium text-warm-gray">
             Email
           </label>
           <Input
@@ -57,7 +56,7 @@ export default function LoginPage() {
         </div>
 
         <div className="space-y-1.5">
-          <label htmlFor="password" className="block text-sm font-medium text-warm-gray">
+          <label htmlFor="password" className="block font-sans text-sm font-medium text-warm-gray">
             Contraseña
           </label>
           <Input
@@ -72,7 +71,10 @@ export default function LoginPage() {
         </div>
 
         {error && (
-          <div className="rounded-md bg-blush-light/60 px-4 py-3 text-sm text-elara-error">
+          <div
+            role="alert"
+            className="rounded-md bg-blush-light/60 px-4 py-3 font-sans text-sm text-elara-error"
+          >
             {error}
           </div>
         )}
@@ -82,7 +84,7 @@ export default function LoginPage() {
         </Button>
       </form>
 
-      <p className="text-center text-xs text-warm-gray/50">
+      <p className="text-center font-sans text-xs text-warm-gray/50">
         Para testing: admin@nook.local / password
       </p>
     </div>
