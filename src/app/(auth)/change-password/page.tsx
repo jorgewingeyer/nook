@@ -3,6 +3,8 @@
 import { changePasswordAction } from "./change-password.action";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function ChangePasswordPage() {
   const router = useRouter();
@@ -20,13 +22,13 @@ export default function ChangePasswordPage() {
     setLoading(true);
 
     if (newPassword !== confirmPassword) {
-      setError("New passwords do not match");
+      setError("Las contraseñas nuevas no coinciden.");
       setLoading(false);
       return;
     }
 
     if (newPassword.length < 8) {
-      setError("Password must be at least 8 characters");
+      setError("La contraseña debe tener al menos 8 caracteres.");
       setLoading(false);
       return;
     }
@@ -42,81 +44,83 @@ export default function ChangePasswordPage() {
           router.push("/");
         }, 1500);
       }
-    } catch (err) {
-      setError("An unexpected error occurred");
+    } catch {
+      setError("Ocurrió un error inesperado. Intentá de nuevo.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       <div className="text-center">
-        <h1 className="text-2xl font-bold">Change Password</h1>
-        <p className="mt-2 text-sm text-gray-600">
-          You must change your password to continue
+        <h1 className="font-serif text-2xl font-light text-espresso">Cambiá tu contraseña</h1>
+        <p className="mt-2 text-sm text-warm-gray">
+          Necesitás actualizar tu contraseña para continuar.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Current Password
+        <div className="space-y-1.5">
+          <label htmlFor="currentPassword" className="block text-sm font-medium text-warm-gray">
+            Contraseña actual
           </label>
-          <input
+          <Input
+            id="currentPassword"
             type="password"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
             required
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            autoComplete="current-password"
+            placeholder="••••••••"
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            New Password
+        <div className="space-y-1.5">
+          <label htmlFor="newPassword" className="block text-sm font-medium text-warm-gray">
+            Nueva contraseña
           </label>
-          <input
+          <Input
+            id="newPassword"
             type="password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             required
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            autoComplete="new-password"
+            placeholder="Mínimo 8 caracteres"
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Confirm New Password
+        <div className="space-y-1.5">
+          <label htmlFor="confirmPassword" className="block text-sm font-medium text-warm-gray">
+            Confirmá la nueva contraseña
           </label>
-          <input
+          <Input
+            id="confirmPassword"
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            autoComplete="new-password"
+            placeholder="••••••••"
           />
         </div>
 
         {error && (
-          <div className="rounded-md bg-red-50 p-3 text-sm text-red-700">
+          <div className="rounded-md bg-blush-light/60 px-4 py-3 text-sm text-elara-error">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="rounded-md bg-green-50 p-3 text-sm text-green-700">
-            Password changed successfully. Redirecting...
+          <div className="rounded-md bg-sage-light/40 px-4 py-3 text-sm text-elara-success">
+            ¡Contraseña actualizada! Redirigiendo…
           </div>
         )}
 
-        <button
-          type="submit"
-          disabled={loading || success}
-          className="w-full rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
-        >
-          {loading ? "Changing password..." : "Change Password"}
-        </button>
+        <Button type="submit" disabled={loading || success} className="mt-2 w-full">
+          {loading ? "Actualizando..." : "Actualizar contraseña"}
+        </Button>
       </form>
     </div>
   );

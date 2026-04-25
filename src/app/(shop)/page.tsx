@@ -39,28 +39,30 @@ export default async function TiendaPage({ searchParams }: PageProps) {
   const totalPages = Math.ceil(catalog.total / catalog.limit);
 
   return (
-    <div className="container mx-auto max-w-6xl px-4 py-8 space-y-10">
+    <div className="container mx-auto max-w-6xl space-y-12 px-4 py-8">
       {/* Hero — only when no filters active */}
       {!hasFilters && (
-        <section className="rounded-2xl bg-gradient-to-br from-neutral-900 to-neutral-700 px-8 py-16 text-white sm:px-12 sm:py-20">
-          <p className="text-sm font-medium uppercase tracking-widest opacity-70">Bienvenido</p>
-          <h1 className="mt-2 text-4xl font-bold sm:text-5xl">
-            Descubrí lo que <br className="hidden sm:block" />
-            tenemos para vos
-          </h1>
-          <p className="mt-4 max-w-md text-lg opacity-80">
-            Productos seleccionados con cuidado. Envío a todo el país.
+        <section className="overflow-hidden rounded-2xl bg-gradient-to-br from-charcoal via-espresso to-stone-warm px-8 py-16 sm:px-12 sm:py-24">
+          <p className="text-xs font-medium uppercase tracking-widest text-gold">
+            Bienvenida
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild size="lg" className="bg-white text-neutral-900 hover:bg-neutral-100">
-              <Link href="/?sort=newest">Ver novedades</Link>
+          <h1 className="mt-3 font-serif text-4xl font-light leading-tight tracking-tight text-cream sm:text-6xl">
+            Tu hogar, tu mejor <br className="hidden sm:block" />
+            obra de arte.
+          </h1>
+          <p className="mt-5 max-w-md text-base font-light leading-relaxed text-cream/70">
+            Piezas seleccionadas con cuidado para transformar cada rincón en un refugio de calma.
+          </p>
+          <div className="mt-10 flex flex-wrap gap-3">
+            <Button asChild size="lg">
+              <Link href="/?sort=newest">Explorá la colección</Link>
             </Button>
             {categories[0] && (
               <Button
                 asChild
                 size="lg"
                 variant="outline"
-                className="border-white/40 text-white hover:bg-white/10"
+                className="border-cream/25 text-cream hover:bg-cream/10 hover:text-cream"
               >
                 <Link href={`/?category=${categories[0].slug}`}>{categories[0].name}</Link>
               </Button>
@@ -71,8 +73,16 @@ export default async function TiendaPage({ searchParams }: PageProps) {
 
       {/* Featured products */}
       {!hasFilters && featured.length > 0 && (
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold">Destacados</h2>
+        <section className="space-y-5">
+          <div className="flex items-end justify-between">
+            <h2 className="font-serif text-2xl font-light text-espresso">Destacados</h2>
+            <Link
+              href="/?sort=newest"
+              className="text-sm text-warm-gray transition-colors hover:text-gold"
+            >
+              Ver todos
+            </Link>
+          </div>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {featured.map((product) => (
               <ProductCard key={product.id} product={product} />
@@ -84,13 +94,13 @@ export default async function TiendaPage({ searchParams }: PageProps) {
       {/* Categories */}
       {!hasFilters && categories.length > 0 && (
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold">Categorías</h2>
+          <h2 className="font-serif text-2xl font-light text-espresso">Categorías</h2>
           <div className="flex flex-wrap gap-2">
             {categories.map((cat) => (
               <Link
                 key={cat.id}
                 href={`/?category=${cat.slug}`}
-                className="rounded-full border bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
+                className="rounded-full border border-sand/60 bg-warm-white px-4 py-1.5 text-sm font-medium text-espresso transition-all hover:border-gold/50 hover:bg-gold-lighter/40 hover:text-gold"
               >
                 {cat.name}
               </Link>
@@ -100,13 +110,13 @@ export default async function TiendaPage({ searchParams }: PageProps) {
       )}
 
       {/* Catalog */}
-      <section className="space-y-5">
+      <section className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">
+          <h2 className="font-serif text-2xl font-light text-espresso">
             {hasFilters ? "Resultados" : "Todos los productos"}
           </h2>
           {catalog.total > 0 && (
-            <span className="text-sm text-muted-foreground">{catalog.total} productos</span>
+            <span className="text-sm text-warm-gray">{catalog.total} productos</span>
           )}
         </div>
 
@@ -120,8 +130,8 @@ export default async function TiendaPage({ searchParams }: PageProps) {
         </Suspense>
 
         {catalog.products.length === 0 ? (
-          <div className="flex flex-col items-center gap-3 py-20 text-muted-foreground">
-            <Package className="h-12 w-12" />
+          <div className="flex flex-col items-center gap-4 py-20 text-warm-gray">
+            <Package className="h-12 w-12 text-sand" />
             <p className="text-base">No se encontraron productos</p>
             <Button asChild variant="outline" size="sm">
               <Link href="/">Limpiar filtros</Link>
@@ -135,26 +145,21 @@ export default async function TiendaPage({ searchParams }: PageProps) {
               ))}
             </div>
 
-            {/* Pagination */}
             {totalPages > 1 && (
               <div className="flex items-center justify-center gap-3 pt-4">
                 {page > 1 && (
                   <Button asChild variant="outline" size="sm">
-                    <Link
-                      href={`/?${new URLSearchParams({ ...params, page: String(page - 1) }).toString()}`}
-                    >
+                    <Link href={`/?${new URLSearchParams({ ...params, page: String(page - 1) }).toString()}`}>
                       Anterior
                     </Link>
                   </Button>
                 )}
-                <span className="text-sm text-muted-foreground">
+                <span className="text-sm text-warm-gray">
                   Página {page} de {totalPages}
                 </span>
                 {page < totalPages && (
                   <Button asChild variant="outline" size="sm">
-                    <Link
-                      href={`/?${new URLSearchParams({ ...params, page: String(page + 1) }).toString()}`}
-                    >
+                    <Link href={`/?${new URLSearchParams({ ...params, page: String(page + 1) }).toString()}`}>
                       Siguiente
                     </Link>
                   </Button>

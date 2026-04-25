@@ -4,34 +4,138 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-    --sidebar: hsl(0 0% 98%);
-    --sidebar-foreground: hsl(240 5.3% 26.1%);
-    --sidebar-primary: hsl(240 5.9% 10%);
-    --sidebar-primary-foreground: hsl(0 0% 98%);
-    --sidebar-accent: hsl(240 4.8% 95.9%);
-    --sidebar-accent-foreground: hsl(240 5.9% 10%);
-    --sidebar-border: hsl(220 13% 91%);
-    --sidebar-ring: hsl(217.2 91.2% 59.8%);
-}
+  /* ── ÉLARA HOME PALETTE ── */
+  --cream:          #F5EDE0;
+  --warm-white:     #FAF6F1;
+  --parchment:      #EEE0CC;
+  --gold-lighter:   #EDD9B4;
+  --gold-light:     #D4AF7A;
+  --gold:           #B8945F;
+  --gold-dark:      #8A6B3D;
+  --gold-darker:    #5E4520;
+  --sand:           #E2C9A0;
+  --warm-tan:       #C4A882;
+  --warm-gray:      #7A6A58;
+  --stone-warm:     #4D3D2C;
+  --espresso:       #2E1F0E;
+  --charcoal:       #1A1410;
+  --blush:          #D9B8B0;
+  --blush-light:    #EDD5D0;
+  --sage:           #8A9E8C;
+  --sage-light:     #B8CCBA;
+  --elara-success:  #6B9E72;
+  --elara-warning:  #C9963A;
+  --elara-error:    #B85050;
 
-.dark {
-    --sidebar: hsl(240 5.9% 10%);
-    --sidebar-foreground: hsl(240 4.8% 95.9%);
-    --sidebar-primary: hsl(224.3 76.3% 48%);
-    --sidebar-primary-foreground: hsl(0 0% 100%);
-    --sidebar-accent: hsl(240 3.7% 15.9%);
-    --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-    --sidebar-border: hsl(240 3.7% 15.9%);
-    --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  /* ── TYPOGRAPHY (overridden by next/font on <html>) ── */
+  --font-display: Georgia, 'Times New Roman', serif;
+  --font-body:    'Helvetica Neue', Arial, sans-serif;
+
+  /* ── SHADOWS (warm espresso-tinted) ── */
+  --elara-shadow-xs: 0 1px  4px rgba(46, 31, 14, 0.06);
+  --elara-shadow-sm: 0 2px 12px rgba(46, 31, 14, 0.08);
+  --elara-shadow-md: 0 4px 24px rgba(46, 31, 14, 0.10);
+  --elara-shadow-lg: 0 8px 40px rgba(46, 31, 14, 0.13);
+  --elara-shadow-xl: 0 16px 64px rgba(46, 31, 14, 0.16);
+
+  /* ── SHADCN/UI TOKEN MAPPINGS ── */
+  --background:             var(--cream);
+  --foreground:             var(--charcoal);
+  --card:                   var(--warm-white);
+  --card-foreground:        var(--charcoal);
+  --popover:                var(--warm-white);
+  --popover-foreground:     var(--charcoal);
+  --primary:                var(--gold);
+  --primary-foreground:     var(--cream);
+  --secondary:              var(--parchment);
+  --secondary-foreground:   var(--espresso);
+  --muted:                  var(--parchment);
+  --muted-foreground:       var(--warm-gray);
+  --accent:                 var(--gold-lighter);
+  --accent-foreground:      var(--espresso);
+  --destructive:            var(--elara-error);
+  --border:                 rgba(226, 201, 160, 0.6);
+  --input:                  rgba(226, 201, 160, 0.4);
+  --ring:                   rgba(184, 148, 95, 0.5);
+  --radius:                 0.5rem;
+
+  /* ── SIDEBAR TOKENS (admin — dark espresso) ── */
+  --sidebar:                     var(--espresso);
+  --sidebar-foreground:          var(--cream);
+  --sidebar-primary:             var(--gold);
+  --sidebar-primary-foreground:  var(--cream);
+  --sidebar-accent:              #3d2a15;
+  --sidebar-accent-foreground:   rgba(245, 237, 224, 0.85);
+  --sidebar-border:              rgba(184, 148, 95, 0.20);
+  --sidebar-ring:                rgba(184, 148, 95, 0.45);
 }
 
 @theme inline {
-    --color-sidebar: var(--sidebar);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-ring: var(--sidebar-ring);
+  /* ── SHADCN COLOR UTILITIES ── */
+  --color-background:                    var(--background);
+  --color-foreground:                    var(--foreground);
+  --color-card:                          var(--card);
+  --color-card-foreground:               var(--card-foreground);
+  --color-popover:                       var(--popover);
+  --color-popover-foreground:            var(--popover-foreground);
+  --color-primary:                       var(--primary);
+  --color-primary-foreground:            var(--primary-foreground);
+  --color-secondary:                     var(--secondary);
+  --color-secondary-foreground:          var(--secondary-foreground);
+  --color-muted:                         var(--muted);
+  --color-muted-foreground:              var(--muted-foreground);
+  --color-accent:                        var(--accent);
+  --color-accent-foreground:             var(--accent-foreground);
+  --color-destructive:                   var(--destructive);
+  --color-border:                        var(--border);
+  --color-input:                         var(--input);
+  --color-ring:                          var(--ring);
+  /* ── SIDEBAR COLOR UTILITIES ── */
+  --color-sidebar:                       var(--sidebar);
+  --color-sidebar-foreground:            var(--sidebar-foreground);
+  --color-sidebar-primary:               var(--sidebar-primary);
+  --color-sidebar-primary-foreground:    var(--sidebar-primary-foreground);
+  --color-sidebar-accent:                var(--sidebar-accent);
+  --color-sidebar-accent-foreground:     var(--sidebar-accent-foreground);
+  --color-sidebar-border:                var(--sidebar-border);
+  --color-sidebar-ring:                  var(--sidebar-ring);
+  /* ── ÉLARA PALETTE UTILITIES ── */
+  --color-cream:           var(--cream);
+  --color-warm-white:      var(--warm-white);
+  --color-parchment:       var(--parchment);
+  --color-gold:            var(--gold);
+  --color-gold-lighter:    var(--gold-lighter);
+  --color-gold-light:      var(--gold-light);
+  --color-gold-dark:       var(--gold-dark);
+  --color-gold-darker:     var(--gold-darker);
+  --color-sand:            var(--sand);
+  --color-warm-tan:        var(--warm-tan);
+  --color-warm-gray:       var(--warm-gray);
+  --color-stone-warm:      var(--stone-warm);
+  --color-espresso:        var(--espresso);
+  --color-charcoal:        var(--charcoal);
+  --color-blush:           var(--blush);
+  --color-blush-light:     var(--blush-light);
+  --color-sage:            var(--sage);
+  --color-sage-light:      var(--sage-light);
+  --color-elara-success:   var(--elara-success);
+  --color-elara-warning:   var(--elara-warning);
+  --color-elara-error:     var(--elara-error);
+  /* ── FONT UTILITIES ── */
+  --font-sans:             var(--font-body);
+  --font-serif:            var(--font-display);
+  /* ── WARM SHADOW UTILITIES ── */
+  --shadow-xs:             var(--elara-shadow-xs);
+  --shadow-sm:             var(--elara-shadow-sm);
+  --shadow-md:             var(--elara-shadow-md);
+  --shadow-lg:             var(--elara-shadow-lg);
+  --shadow-xl:             var(--elara-shadow-xl);
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--cream);
+  color: var(--charcoal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
