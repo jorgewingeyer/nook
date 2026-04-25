@@ -4,7 +4,7 @@ INSERT INTO users (name, email, password, role, is_active, must_change_password,
 VALUES (
   'Admin User',
   'admin@nook.local',
-  '1e79a58b20049c0cc9a6c19a9755d35e00ca9a082fce47c68d4253a674ba2ea4',
+  '387c7005dd1e0f456e6a8775f6f4f83e40727ba9205d77e4f0b335a932a81e59',
   'admin',
   1,
   1,
