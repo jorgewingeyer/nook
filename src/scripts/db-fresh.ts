@@ -2,7 +2,7 @@ import { execSync } from "child_process";
 
 const commands = [
   'echo "Removing old migrations..."',
-  "rm -f .wrangler/state/v3/d1/miniflare-D1DatabaseObject/*.sqlite",
+  "rm -f .wrangler/state/v3/d1/miniflare-D1DatabaseObject/*.sqlite*",
   'echo "Generating migrations..."',
   "pnpm db:generate",
   'echo "Applying migrations..."',
