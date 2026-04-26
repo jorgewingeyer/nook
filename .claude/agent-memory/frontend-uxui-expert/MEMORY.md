@@ -1,0 +1,1 @@
+- [Nook Brand Voice & Copy Guidelines](project_nook_brand_voice.md) — Argentine boutique home decor brand: tone, copy rules, confirmed copy patterns

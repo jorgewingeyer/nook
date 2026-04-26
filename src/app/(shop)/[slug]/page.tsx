@@ -63,7 +63,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
               <p className="font-serif text-3xl font-light text-espresso">
                 {formatCurrency(product.price)}
               </p>
-              <p className="text-xs text-warm-gray">IVA incluido</p>
+              <p className="text-xs text-warm-gray">Precio final · IVA incluido</p>
             </div>
 
             {/* Stock */}
@@ -83,7 +83,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
               ) : (
                 <>
                   <X className="h-4 w-4 text-elara-error" strokeWidth={1.5} />
-                  <span className="font-medium text-elara-error">Sin stock</span>
+                  <span className="font-medium text-elara-error">Temporalmente sin stock</span>
                 </>
               )}
             </div>
@@ -115,15 +115,15 @@ export default async function ProductDetailPage({ params }: PageProps) {
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-sm">
                   <Truck className="h-4 w-4 shrink-0 text-gold" strokeWidth={1.5} />
-                  <span className="text-espresso">Envío gratis en pedidos superiores a $50.000</span>
+                  <span className="text-espresso">Envío gratis en pedidos desde $50.000</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                   <RotateCcw className="h-4 w-4 shrink-0 text-gold" strokeWidth={1.5} />
-                  <span className="text-espresso">Devolución gratuita en 30 días</span>
+                  <span className="text-espresso">Cambios y devoluciones sin costo · 30 días</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                   <ShieldCheck className="h-4 w-4 shrink-0 text-gold" strokeWidth={1.5} />
-                  <span className="text-espresso">Pago 100% seguro</span>
+                  <span className="text-espresso">Pago seguro garantizado</span>
                 </div>
               </div>
             </div>
@@ -178,9 +178,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 />
               </summary>
               <div className="border-t border-sand/40 px-4 pb-4 pt-3 text-sm leading-relaxed text-warm-gray">
-                Envíos a todo el país. Plazo de entrega: 3–5 días hábiles para el interior,
-                24–48 hs para CABA y GBA. Devoluciones gratuitas dentro de los 30 días de
-                recibido el pedido.
+                Enviamos a todo el país. Para CABA y GBA: 24–48 hs hábiles. Interior: 3–5 días hábiles. Si cuando llega no es lo que imaginabas, tenés 30 días para hacer el cambio o devolución sin ningún costo.
               </div>
             </details>
           </div>

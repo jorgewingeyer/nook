@@ -7,7 +7,7 @@ import { getCartCountAction } from "./carrito/cart.action";
 
 const FOOTER_COLS = [
   {
-    title: "Tienda",
+    title: "La tienda",
     links: [
       { label: "Iluminación", href: "/?category=iluminacion" },
       { label: "Textiles",    href: "/?category=textiles" },
@@ -17,17 +17,17 @@ const FOOTER_COLS = [
     ],
   },
   {
-    title: "Ayuda",
+    title: "Te ayudamos",
     links: [
       { label: "Cómo comprar",    href: "/ayuda/como-comprar" },
       { label: "Envíos",          href: "/ayuda/envios" },
       { label: "Devoluciones",    href: "/ayuda/devoluciones" },
       { label: "Seguí tu pedido", href: "/pedido" },
-      { label: "FAQ",             href: "/ayuda/faq" },
+      { label: "Preguntas frecuentes", href: "/ayuda/faq" },
     ],
   },
   {
-    title: "Marca",
+    title: "Nook",
     links: [
       { label: "Nuestra historia",  href: "/nosotros" },
       { label: "Sustentabilidad",   href: "/sustentabilidad" },
@@ -53,22 +53,22 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
               <div className="flex items-start gap-3">
                 <Truck className="mt-0.5 h-5 w-5 shrink-0 text-gold" strokeWidth={1.5} />
                 <div>
-                  <p className="text-sm font-medium text-cream">Envío a todo el país</p>
-                  <p className="mt-0.5 text-xs text-cream/60">Despacho en 24–48 hs hábiles</p>
+                  <p className="text-sm font-medium text-cream">Enviamos a todo el país</p>
+                  <p className="mt-0.5 text-xs text-cream/60">Despachamos en 24–48 hs hábiles</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-gold" strokeWidth={1.5} />
                 <div>
                   <p className="text-sm font-medium text-cream">Pago 100% seguro</p>
-                  <p className="mt-0.5 text-xs text-cream/60">Procesado por MercadoPago</p>
+                  <p className="mt-0.5 text-xs text-cream/60">Procesamos con MercadoPago</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <RefreshCw className="mt-0.5 h-5 w-5 shrink-0 text-gold" strokeWidth={1.5} />
                 <div>
                   <p className="text-sm font-medium text-cream">Devoluciones sin costo</p>
-                  <p className="mt-0.5 text-xs text-cream/60">Hasta 30 días después de la compra</p>
+                  <p className="mt-0.5 text-xs text-cream/60">Tenés 30 días si algo no te convence</p>
                 </div>
               </div>
             </div>
@@ -84,7 +84,7 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
                 <NookLogo variant="dark" width={130} />
               </div>
               <p className="max-w-[220px] font-serif text-[1rem] font-light italic leading-relaxed text-cream/60">
-                "Cada rincón tiene el potencial de convertirse en un espacio especial."
+                "No vendemos objetos. Creamos rincones."
               </p>
               {/* Social links */}
               <div className="mt-6 flex gap-3">
@@ -145,10 +145,10 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
             <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="font-serif text-[1rem] font-light text-cream">
-                  Suscribite · 10% off en tu primera compra
+                  Suscribite y llevate 10% off en tu primera compra
                 </p>
                 <p className="mt-1 text-[11px] text-cream/45">
-                  Inspiración y novedades directo a tu mail, sin spam.
+                  Inspiración, novedades y rincones bien elegidos. Sin spam, prometido.
                 </p>
               </div>
               <NewsletterForm />

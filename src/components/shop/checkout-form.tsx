@@ -50,7 +50,7 @@ export function CheckoutForm({ cart }: { cart: CartData }) {
       <form onSubmit={handleSubmit} className="space-y-5 lg:col-span-3">
         {/* Contact */}
         <section className="space-y-4 rounded-lg border border-sand/60 bg-warm-white p-5">
-          <h2 className="font-medium text-espresso">Datos de contacto</h2>
+          <h2 className="font-medium text-espresso">Tus datos de contacto</h2>
           <div className="space-y-1.5">
             <Label htmlFor="customerName" className="text-warm-gray">
               Nombre completo *
@@ -86,7 +86,7 @@ export function CheckoutForm({ cart }: { cart: CartData }) {
 
         {/* Shipping address */}
         <section className="space-y-4 rounded-lg border border-sand/60 bg-warm-white p-5">
-          <h2 className="font-medium text-espresso">Dirección de envío</h2>
+          <h2 className="font-medium text-espresso">¿A dónde lo enviamos?</h2>
           <div className="space-y-1.5">
             <Label htmlFor="shippingAddress" className="text-warm-gray">
               Calle y número *
@@ -127,7 +127,7 @@ export function CheckoutForm({ cart }: { cart: CartData }) {
 
         {/* Shipping method */}
         <section className="space-y-3 rounded-lg border border-sand/60 bg-warm-white p-5">
-          <h2 className="font-medium text-espresso">Método de envío</h2>
+          <h2 className="font-medium text-espresso">¿Cómo querés recibirlo?</h2>
           {(Object.keys(SHIPPING_LABELS) as ShippingMethod[]).map((method) => {
             const { label, description } = SHIPPING_LABELS[method];
             const isSelected = shippingMethod === method;
@@ -167,14 +167,14 @@ export function CheckoutForm({ cart }: { cart: CartData }) {
 
         <Button type="submit" size="lg" disabled={isPending} className="w-full">
           {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-          {isPending ? "Procesando..." : `Ir a pagar ${formatCurrency(total)}`}
+          {isPending ? "Un momento..." : `Ir a pagar ${formatCurrency(total)}`}
         </Button>
       </form>
 
       {/* Order summary */}
       <aside className="lg:col-span-2">
         <div className="sticky top-24 rounded-lg border border-sand/60 bg-warm-white p-5">
-          <h2 className="mb-4 font-medium text-espresso">Resumen del pedido</h2>
+          <h2 className="mb-4 font-medium text-espresso">Lo que elegiste</h2>
           <div className="space-y-3">
             {cart.items.map((item) => (
               <div key={item.id} className="flex items-start justify-between gap-2 text-sm">

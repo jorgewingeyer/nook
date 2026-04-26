@@ -19,13 +19,13 @@ export default async function CarritoPage() {
       <div className="container mx-auto flex max-w-2xl flex-col items-center gap-6 px-4 py-24 text-center">
         <ShoppingBag className="h-14 w-14 text-sand" strokeWidth={1} />
         <div>
-          <h1 className="font-serif text-2xl font-light text-espresso">Tu carrito está vacío</h1>
+          <h1 className="font-serif text-2xl font-light text-espresso">Tu carrito está esperando algo especial</h1>
           <p className="mt-2 text-sm text-warm-gray">
-            Explorá nuestra tienda y encontrá algo que te guste.
+            Explorá nuestra colección y encontrá la pieza que le faltaba a tu rincón.
           </p>
         </div>
         <Button asChild size="lg">
-          <Link href="/">Ir a la tienda</Link>
+          <Link href="/">Explorá la colección</Link>
         </Button>
       </div>
     );
@@ -37,9 +37,9 @@ export default async function CarritoPage() {
   return (
     <div className="container mx-auto max-w-5xl px-4 py-8">
       <h1 className="mb-2 font-serif text-2xl font-light text-espresso">
-        Carrito{" "}
+        Tu selección{" "}
         <span className="font-sans text-base font-normal text-warm-gray">
-          ({cart.itemCount} {cart.itemCount === 1 ? "producto" : "productos"})
+          ({cart.itemCount} {cart.itemCount === 1 ? "pieza" : "piezas"})
         </span>
       </h1>
 
@@ -55,9 +55,9 @@ export default async function CarritoPage() {
             <div className="flex items-center gap-2 text-sm text-warm-gray">
               <Truck className="h-4 w-4 shrink-0 text-gold" strokeWidth={1.5} />
               <span>
-                Agregá{" "}
+                Sumá{" "}
                 <span className="font-medium text-espresso">{formatCurrency(remaining)}</span>{" "}
-                más para envío gratis
+                más y el envío te sale gratis
               </span>
             </div>
             <div className="h-1.5 w-full overflow-hidden rounded-full bg-sand/40">
@@ -80,14 +80,14 @@ export default async function CarritoPage() {
           </div>
           <div className="mt-4">
             <Button asChild variant="ghost" size="sm" className="text-warm-gray hover:text-gold">
-              <Link href="/">← Continuar comprando</Link>
+              <Link href="/">← Seguir explorando</Link>
             </Button>
           </div>
         </div>
 
         {/* Summary */}
         <aside className="rounded-lg border border-sand/60 bg-warm-white p-5 lg:sticky lg:top-24 lg:self-start">
-          <h2 className="mb-4 font-medium text-espresso">Resumen</h2>
+          <h2 className="mb-4 font-medium text-espresso">Resumen de tu pedido</h2>
           <div className="space-y-2.5 text-sm">
             <div className="flex justify-between">
               <span className="text-warm-gray">Subtotal</span>
@@ -99,7 +99,7 @@ export default async function CarritoPage() {
                 {remaining === 0 ? (
                   <span className="font-medium text-elara-success">Gratis</span>
                 ) : (
-                  "Se calcula al finalizar"
+                  "Se calcula al finalizar el pedido"
                 )}
               </span>
             </div>
@@ -112,7 +112,7 @@ export default async function CarritoPage() {
             </span>
           </div>
           <Button asChild size="lg" className="mt-5 w-full">
-            <Link href="/checkout">Finalizar compra</Link>
+            <Link href="/checkout">Ir a pagar</Link>
           </Button>
         </aside>
       </div>

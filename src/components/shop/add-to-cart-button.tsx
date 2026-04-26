@@ -26,7 +26,7 @@ export function AddToCartButton({ productId, stock }: AddToCartButtonProps) {
         toast.error(result.error);
         return;
       }
-      toast.success("Agregado al carrito");
+      toast.success("¡Agregado a tu selección!");
       router.refresh();
     });
   }
@@ -34,7 +34,7 @@ export function AddToCartButton({ productId, stock }: AddToCartButtonProps) {
   if (outOfStock) {
     return (
       <Button disabled variant="outline" size="lg" className="w-full cursor-not-allowed opacity-60">
-        Sin stock
+        Temporalmente sin stock
       </Button>
     );
   }
@@ -65,7 +65,7 @@ export function AddToCartButton({ productId, stock }: AddToCartButtonProps) {
             <Plus className="h-3.5 w-3.5" strokeWidth={1.5} />
           </button>
         </div>
-        <span className="text-xs text-warm-gray">{stock} disponibles</span>
+        <span className="text-xs text-warm-gray">{stock} {stock === 1 ? "unidad disponible" : "unidades disponibles"}</span>
       </div>
 
       <Button size="lg" onClick={handleAdd} disabled={isPending} className="w-full">
@@ -74,7 +74,7 @@ export function AddToCartButton({ productId, stock }: AddToCartButtonProps) {
         ) : (
           <ShoppingBag className="h-4 w-4" strokeWidth={1.5} />
         )}
-        {isPending ? "Agregando..." : "Agregar al carrito"}
+        {isPending ? "Agregando a tu selección..." : "Agregar al carrito"}
       </Button>
     </div>
   );

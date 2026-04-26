@@ -28,9 +28,9 @@ export default async function ExitoPage({ searchParams }: PageProps) {
         <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-sage-light/40">
           <CheckCircle2 className="h-10 w-10 text-elara-success" strokeWidth={1.5} />
         </div>
-        <h1 className="font-serif text-3xl font-light text-espresso">¡Pedido recibido!</h1>
+        <h1 className="font-serif text-3xl font-light text-espresso">¡Qué buena elección!</h1>
         <p className="mt-2 text-sm text-warm-gray">
-          Gracias por tu compra. Te confirmaremos el envío por email.
+          Tu pedido está en camino a convertirse en parte de tu hogar. Te escribimos cuando despache.
         </p>
       </div>
 
@@ -40,7 +40,7 @@ export default async function ExitoPage({ searchParams }: PageProps) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-xs font-medium uppercase tracking-widest text-warm-gray">
-              Número de pedido
+              Tu número de pedido
             </p>
             <p className="mt-0.5 font-mono text-lg font-semibold text-espresso">
               {order.orderNumber}
@@ -124,11 +124,11 @@ export default async function ExitoPage({ searchParams }: PageProps) {
           <Link
             href={`/pedido?numero=${encodeURIComponent(order.orderNumber)}&email=${encodeURIComponent(order.customerEmail)}`}
           >
-            Seguir mi pedido
+            Rastrear mi pedido
           </Link>
         </Button>
         <Button asChild size="lg" className="flex-1">
-          <Link href="/">Seguir comprando</Link>
+          <Link href="/">Seguir explorando</Link>
         </Button>
       </div>
     </div>

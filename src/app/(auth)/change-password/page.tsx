@@ -22,13 +22,13 @@ export default function ChangePasswordPage() {
     setLoading(true);
 
     if (newPassword !== confirmPassword) {
-      setError("Las contraseñas nuevas no coinciden.");
+      setError("Las contraseñas nuevas no coinciden. Revisalas e intentá de nuevo.");
       setLoading(false);
       return;
     }
 
     if (newPassword.length < 8) {
-      setError("La contraseña debe tener al menos 8 caracteres.");
+      setError("La nueva contraseña debe tener al menos 8 caracteres.");
       setLoading(false);
       return;
     }
@@ -45,7 +45,7 @@ export default function ChangePasswordPage() {
         }, 1500);
       }
     } catch {
-      setError("Ocurrió un error inesperado. Intentá de nuevo.");
+      setError("Algo salió mal. Por favor, intentá de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -54,16 +54,16 @@ export default function ChangePasswordPage() {
   return (
     <div className="space-y-7">
       <div className="text-center">
-        <h1 className="font-serif text-2xl font-light text-espresso">Cambiá tu contraseña</h1>
+        <h1 className="font-serif text-2xl font-light text-espresso">Elegí una nueva contraseña</h1>
         <p className="mt-2 text-sm text-warm-gray">
-          Necesitás actualizar tu contraseña para continuar.
+          Para mantener tu cuenta segura, necesitás actualizar tu contraseña antes de continuar.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
           <label htmlFor="currentPassword" className="block text-sm font-medium text-warm-gray">
-            Contraseña actual
+            Tu contraseña actual
           </label>
           <Input
             id="currentPassword"
@@ -114,12 +114,12 @@ export default function ChangePasswordPage() {
 
         {success && (
           <div className="rounded-md bg-sage-light/40 px-4 py-3 text-sm text-elara-success">
-            ¡Contraseña actualizada! Redirigiendo…
+            ¡Listo! Tu contraseña fue actualizada. Redirigiendo…
           </div>
         )}
 
         <Button type="submit" disabled={loading || success} className="mt-2 w-full">
-          {loading ? "Actualizando..." : "Actualizar contraseña"}
+          {loading ? "Guardando..." : "Guardar nueva contraseña"}
         </Button>
       </form>
     </div>

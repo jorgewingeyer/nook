@@ -27,7 +27,7 @@ export default function LoginPage() {
         router.push("/");
       }
     } catch {
-      setError("Ocurrió un error inesperado. Intentá de nuevo.");
+      setError("Algo salió mal. Por favor, intentá de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -36,7 +36,7 @@ export default function LoginPage() {
   return (
     <div className="space-y-7">
       <div className="text-center">
-        <p className="font-sans text-sm text-warm-gray">Ingresá a tu cuenta de administración</p>
+        <p className="font-sans text-sm text-warm-gray">Ingresá para gestionar tu tienda</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -80,7 +80,7 @@ export default function LoginPage() {
         )}
 
         <Button type="submit" disabled={loading} className="mt-2 w-full">
-          {loading ? "Ingresando..." : "Ingresar"}
+          {loading ? "Ingresando..." : "Entrar"}
         </Button>
       </form>
 
