@@ -378,6 +378,14 @@ FROM nook_events WHERE timestamp > NOW() - INTERVAL '7' DAY
 GROUP BY event, slug ORDER BY n DESC
 ```
 
+### Shopping assistant (Phase 3 — Agents SDK)
+
+`workers/shopping-agent` hosts `ShoppingAgent`, a stateful agent (Durable Object
++ SQLite) that answers catalog questions via Workers AI + tools over D1. Deploy
+it (`cd workers/shopping-agent && wrangler deploy`) then set
+`NEXT_PUBLIC_AGENT_HOST` to its `*.workers.dev` host — the storefront's floating
+chat widget activates. Requires Workers Paid (Durable Objects + Workers AI).
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.

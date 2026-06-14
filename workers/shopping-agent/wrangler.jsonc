@@ -1,0 +1,37 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "nook-shopping-agent",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-09-27",
+  "compatibility_flags": ["nodejs_compat"],
+  // Same D1 catalog as the Next app — set database_id to the real id.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "nook",
+      "database_id": "YOUR_D1_DATABASE_ID_HERE"
+    }
+  ],
+  // Workers AI for inference (optionally route via AI Gateway with AI_GATEWAY_ID).
+  "ai": {
+    "binding": "AI"
+  },
+  "vars": {
+    "AI_GATEWAY_ID": "nook-gateway"
+  },
+  // The agent is a Durable Object with embedded SQLite.
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "ShoppingAgent",
+        "class_name": "ShoppingAgent"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["ShoppingAgent"]
+    }
+  ]
+}
