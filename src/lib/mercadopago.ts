@@ -101,3 +101,71 @@ export async function getMpPayment(paymentId: string, accessToken: string) {
     transaction_amount: number;
   }>;
 }
+
+function timingSafeEqualHex(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let mismatch = 0;
+  for (let i = 0; i < a.length; i++) {
+    mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return mismatch === 0;
+}
+
+/**
+ * Verifies a MercadoPago webhook signature.
+ * MP sends `x-signature: ts=<ts>,v1=<hmac>` and `x-request-id`.
+ * The signed manifest is `id:<data.id>;request-id:<x-request-id>;ts:<ts>;`,
+ * HMAC-SHA256'd with the webhook secret configured in the MP dashboard.
+ * See https://www.mercadopago.com/developers/en/docs/your-integrations/notifications/webhooks
+ */
+export async function verifyMpWebhookSignature({
+  signatureHeader,
+  requestId,
+  dataId,
+  secret,
+}: {
+  signatureHeader: string | null;
+  requestId: string | null;
+  dataId: string;
+  secret: string;
+}): Promise<boolean> {
+  if (!signatureHeader) return false;
+
+  const parts: Record<string, string> = {};
+  for (const segment of signatureHeader.split(",")) {
+    const idx = segment.indexOf("=");
+    if (idx === -1) continue;
+    const key = segment.slice(0, idx).trim();
+    const value = segment.slice(idx + 1).trim();
+    if (key) parts[key] = value;
+  }
+
+  const ts = parts.ts;
+  const v1 = parts.v1;
+  if (!ts || !v1) return false;
+
+  // MP lowercases data.id when it is alphanumeric.
+  const normalizedId = dataId.toLowerCase();
+  let manifest = "";
+  if (normalizedId) manifest += `id:${normalizedId};`;
+  if (requestId) manifest += `request-id:${requestId};`;
+  manifest += `ts:${ts};`;
+
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const signature = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    new TextEncoder().encode(manifest),
+  );
+  const computed = Array.from(new Uint8Array(signature))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+
+  return timingSafeEqualHex(computed, v1);
+}

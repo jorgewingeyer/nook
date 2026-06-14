@@ -41,6 +41,7 @@ export async function createOrderAction(formData: FormData): Promise<CheckoutRes
   if (!shippingProvince) return { error: "La provincia es requerida" };
   if (!shippingZip) return { error: "El código postal es requerido" };
 
+  const stockByProduct = new Map<number, number>();
   for (const item of cartData.items) {
     const product = await db
       .select({ stock: products.stock })
@@ -50,6 +51,7 @@ export async function createOrderAction(formData: FormData): Promise<CheckoutRes
     if (!product || product.stock < item.quantity) {
       return { error: `Stock insuficiente para "${item.name}"` };
     }
+    stockByProduct.set(item.productId, product.stock);
   }
 
   const shippingCost = calcShippingCost(shippingMethod);
@@ -80,45 +82,45 @@ export async function createOrderAction(formData: FormData): Promise<CheckoutRes
     .returning({ id: orders.id })
     .get();
 
-  await db.insert(orderItems).values(
-    cartData.items.map((item) => ({
+  const writes: any[] = [
+    db.insert(orderItems).values(
+      cartData.items.map((item) => ({
+        orderId: order.id,
+        productId: item.productId,
+        productName: item.name,
+        productSku: item.sku,
+        quantity: item.quantity,
+        unitPrice: item.price,
+        totalPrice: item.subtotal,
+      })),
+    ),
+    db.insert(orderStatusHistory).values({
       orderId: order.id,
-      productId: item.productId,
-      productName: item.name,
-      productSku: item.sku,
-      quantity: item.quantity,
-      unitPrice: item.price,
-      totalPrice: item.subtotal,
-    })),
-  );
-
-  await db.insert(orderStatusHistory).values({
-    orderId: order.id,
-    status: "pending",
-    note: "Pedido creado, esperando pago",
-  });
+      status: "pending",
+      note: "Pedido creado, esperando pago",
+    }),
+  ];
 
   for (const item of cartData.items) {
-    const product = await db
-      .select({ stock: products.stock })
-      .from(products)
-      .where(eq(products.id, item.productId))
-      .get();
-
-    if (product) {
-      const newStock = product.stock - item.quantity;
-      await db.update(products).set({ stock: newStock }).where(eq(products.id, item.productId));
-      await db.insert(inventoryMovements).values({
+    const previousStock = stockByProduct.get(item.productId) ?? 0;
+    const newStock = previousStock - item.quantity;
+    writes.push(
+      db.update(products).set({ stock: newStock }).where(eq(products.id, item.productId)),
+    );
+    writes.push(
+      db.insert(inventoryMovements).values({
         productId: item.productId,
         type: "out",
         quantity: item.quantity,
-        previousStock: product.stock,
+        previousStock,
         newStock,
         reason: `Pedido ${orderNumber}`,
         reference: orderNumber,
-      });
-    }
+      }),
+    );
   }
+
+  await db.batch(writes as [any, ...any[]]);
 
   const mpToken = (env as any).MP_ACCESS_TOKEN as string | undefined;
   const appUrl = (process.env.NEXT_PUBLIC_APP_URL as string | undefined) ?? "https://nook.localhost:1355";
