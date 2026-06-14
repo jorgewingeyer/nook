@@ -2,12 +2,13 @@
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { and, eq } from "drizzle-orm";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { getDb } from "@/lib/db";
 import { cart, cartItems, inventoryMovements, orderItems, orderStatusHistory, orders, products } from "@/db/schema";
 import { COOKIE_CART } from "@/lib/cart-session";
 import { calcShippingCost, generateOrderNumber, type ShippingMethod } from "@/lib/checkout-utils";
 import { createMpPreference } from "@/lib/mercadopago";
+import { verifyTurnstile } from "@/lib/turnstile";
 import { getCartAction } from "../carrito/cart.action";
 
 export type CheckoutResult =
@@ -21,6 +22,13 @@ export async function createOrderAction(formData: FormData): Promise<CheckoutRes
 
   const { env } = await getCloudflareContext();
   const db = getDb((env as any).DB);
+
+  const turnstileToken = formData.get("cf-turnstile-response") as string | null;
+  const ip = (await headers()).get("cf-connecting-ip");
+  const human = await verifyTurnstile(turnstileToken, (env as any).TURNSTILE_SECRET_KEY, ip);
+  if (!human) {
+    return { error: "Verificación de seguridad fallida. Recargá la página e intentá de nuevo." };
+  }
 
   const cartData = await getCartAction(sessionId);
   if (!cartData.items.length) return { error: "El carrito está vacío" };

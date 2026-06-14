@@ -5,14 +5,27 @@ import { getDb } from "@/lib/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { headers } from "next/headers";
+import { verifyTurnstile } from "@/lib/turnstile";
 
 export async function loginAction(
   email: string,
   password: string,
+  turnstileToken?: string,
 ): Promise<{ error?: string }> {
   try {
     const { env } = await getCloudflareContext();
     const db = getDb((env as any).DB);
+
+    const ip = (await headers()).get("cf-connecting-ip");
+    const human = await verifyTurnstile(
+      turnstileToken,
+      (env as any).TURNSTILE_SECRET_KEY,
+      ip,
+    );
+    if (!human) {
+      return { error: "Verificación de seguridad fallida. Intentá de nuevo." };
+    }
 
     const user = await db.select().from(users).where(eq(users.email, email));
 

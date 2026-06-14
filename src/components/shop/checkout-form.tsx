@@ -11,6 +11,7 @@ import { createOrderAction } from "@/app/(shop)/checkout/checkout.action";
 import { SHIPPING_LABELS, type ShippingMethod } from "@/lib/checkout-utils";
 import { formatCurrency } from "@/lib/utils";
 import type { CartData } from "@/app/(shop)/carrito/cart.action";
+import { Turnstile } from "@/components/shared/turnstile";
 
 const SHIPPING_ICONS: Record<ShippingMethod, React.ReactNode> = {
   standard: <Truck className="h-4 w-4 shrink-0 text-gold" strokeWidth={1.5} />,
@@ -164,6 +165,8 @@ export function CheckoutForm({ cart }: { cart: CartData }) {
             );
           })}
         </section>
+
+        <Turnstile />
 
         <Button type="submit" size="lg" disabled={isPending} className="w-full">
           {isPending && <Loader2 className="h-4 w-4 animate-spin" />}

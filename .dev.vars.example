@@ -12,6 +12,11 @@ MP_ACCESS_TOKEN=TEST-your-access-token-here
 # verification is skipped (dev only) and a warning is logged.
 MP_WEBHOOK_SECRET=your-mp-webhook-secret-here
 
+# Cloudflare Turnstile secret key (server-side verification of login/checkout).
+# Dev: the always-pass test secret below. Prod: your real secret from the
+# Turnstile dashboard. If unset, verification is skipped with a warning.
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+
 # Public URL for MercadoPago back_urls and webhooks
 # In production: https://your-domain.com
 NEXT_PUBLIC_APP_URL=https://nook.localhost:1355
