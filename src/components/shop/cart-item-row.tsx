@@ -25,7 +25,7 @@ export function CartItemRow({ item }: { item: CartItem }) {
   function remove() {
     startTransition(async () => {
       await removeFromCartAction(item.productId);
-      toast.success("Producto eliminado");
+      toast.success("Pieza quitada de tu selección");
       router.refresh();
     });
   }
@@ -62,7 +62,7 @@ export function CartItemRow({ item }: { item: CartItem }) {
           type="button"
           onClick={() => updateQty(item.quantity - 1)}
           disabled={isPending}
-          aria-label="Reducir"
+          aria-label="Reducir cantidad"
           className="flex h-8 w-8 items-center justify-center text-espresso transition-colors hover:text-gold disabled:opacity-40"
         >
           {isPending ? (
@@ -76,7 +76,7 @@ export function CartItemRow({ item }: { item: CartItem }) {
           type="button"
           onClick={() => updateQty(item.quantity + 1)}
           disabled={isPending || item.quantity >= item.stock}
-          aria-label="Aumentar"
+          aria-label="Aumentar cantidad"
           className="flex h-8 w-8 items-center justify-center text-espresso transition-colors hover:text-gold disabled:opacity-40"
         >
           <Plus className="h-3 w-3" strokeWidth={1.5} />
@@ -87,7 +87,7 @@ export function CartItemRow({ item }: { item: CartItem }) {
         type="button"
         onClick={remove}
         disabled={isPending}
-        aria-label="Eliminar producto"
+        aria-label={`Quitar ${item.name} del carrito`}
         className="flex h-8 w-8 items-center justify-center rounded-full text-warm-gray transition-colors hover:bg-blush-light/50 hover:text-elara-error disabled:opacity-40"
       >
         <X className="h-4 w-4" strokeWidth={1.5} />

@@ -35,3 +35,6 @@ yarn-error.log*
 local.db
 local.db-shm
 local.db-wal
+
+# graphify knowledge graph (generated artifact)
+/graphify-out

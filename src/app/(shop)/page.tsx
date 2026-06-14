@@ -21,10 +21,10 @@ interface PageProps {
 }
 
 const TRUST_ITEMS = [
-  { icon: Truck,       text: "Envío gratis +$50.000" },
-  { icon: RotateCcw,   text: "30 días de devolución" },
-  { icon: ShieldCheck, text: "Pago 100% seguro" },
-  { icon: Star,        text: "4.9 · +3.200 clientes" },
+  { icon: Truck,       text: "Envío gratis en compras +$50.000" },
+  { icon: RotateCcw,   text: "Devoluciones sin costo · 30 días" },
+  { icon: ShieldCheck, text: "Pago seguro garantizado" },
+  { icon: Star,        text: "4.9 ★ · más de 3.200 hogares felices" },
 ] as const;
 
 const CATEGORY_IMAGES = [
@@ -41,9 +41,9 @@ const REVIEWS = [
 ] as const;
 
 const SOCIAL_PROOF = [
-  { value: "4.9 ★", label: "Valoración" },
-  { value: "+3.200", label: "Clientes" },
-  { value: "100%", label: "Compra segura" },
+  { value: "4.9 ★", label: "Valoración promedio" },
+  { value: "+3.200", label: "Hogares transformados" },
+  { value: "100%", label: "Compra protegida" },
 ] as const;
 
 export default async function TiendaPage({ searchParams }: PageProps) {
@@ -86,7 +86,7 @@ export default async function TiendaPage({ searchParams }: PageProps) {
             </h1>
 
             <p className="mt-6 max-w-[440px] font-sans text-[16px] font-light leading-[1.8] text-warm-gray">
-              Piezas seleccionadas a mano para transformar cada rincón de tu hogar en un lugar con personalidad. Donde lo moderno, lo vintage y lo artesanal conviven en perfecta armonía.
+              Piezas elegidas con cuidado para transformar cada rincón de tu hogar en un lugar con alma propia. Lo moderno, lo vintage y lo artesanal en perfecta armonía.
             </p>
 
             <div className="mt-10 flex flex-wrap items-center gap-4">
@@ -127,7 +127,7 @@ export default async function TiendaPage({ searchParams }: PageProps) {
             {/* Floating mini card */}
             <div className="absolute bottom-12 left-0 -translate-x-0 lg:-translate-x-5 hidden lg:block rounded-lg border border-sand/60 bg-warm-white/96 p-4 shadow-lg backdrop-blur-sm">
               <p className="font-sans text-[9px] uppercase tracking-[0.12em] text-warm-gray">
-                Más vendido
+                El favorito del momento
               </p>
               <p className="mt-1 font-serif text-[0.95rem] leading-snug text-espresso">
                 Lámpara Arco Dorada
@@ -167,14 +167,14 @@ export default async function TiendaPage({ searchParams }: PageProps) {
                   ✦ Destacados
                 </p>
                 <h2 className="mt-2 font-serif text-[clamp(1.6rem,2.5vw,2.2rem)] font-light text-espresso">
-                  Los favoritos de Nook
+                  Los elegidos de Nook
                 </h2>
               </div>
               <Link
                 href="/?sort=newest"
                 className="font-sans text-sm text-warm-gray transition-colors hover:text-gold"
               >
-                Ver todos
+                Ver toda la colección
               </Link>
             </div>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
@@ -188,7 +188,7 @@ export default async function TiendaPage({ searchParams }: PageProps) {
         {/* ── CATEGORY PILLS ── */}
         {!hasFilters && categories.length > 0 && (
           <section className="space-y-4">
-            <h2 className="font-serif text-2xl font-light text-espresso">Categorías</h2>
+            <h2 className="font-serif text-2xl font-light text-espresso">Explorá por categoría</h2>
             <div className="flex flex-wrap gap-2">
               {categories.map((cat) => (
                 <Link
@@ -213,10 +213,10 @@ export default async function TiendaPage({ searchParams }: PageProps) {
             )}
             <div className="mt-2 flex items-center justify-between">
               <h2 className="font-serif text-[clamp(1.6rem,2.5vw,2.2rem)] font-light text-espresso">
-                {hasFilters ? "Resultados" : "Piezas que transforman rincones"}
+                {hasFilters ? "Lo que encontramos para vos" : "Piezas que transforman rincones"}
               </h2>
               {catalog.total > 0 && (
-                <span className="font-sans text-sm text-warm-gray">{catalog.total} productos</span>
+                <span className="font-sans text-sm text-warm-gray">{catalog.total} {catalog.total === 1 ? "pieza" : "piezas"}</span>
               )}
             </div>
           </div>
@@ -233,9 +233,9 @@ export default async function TiendaPage({ searchParams }: PageProps) {
           {catalog.products.length === 0 ? (
             <div className="flex flex-col items-center gap-4 py-20 text-warm-gray">
               <Package className="h-12 w-12 text-sand" strokeWidth={1.5} />
-              <p className="font-sans text-base">No se encontraron productos</p>
+              <p className="font-sans text-base">No encontramos nada con esa búsqueda</p>
               <Button asChild variant="outline" size="sm">
-                <Link href="/">Limpiar filtros</Link>
+                <Link href="/">Ver toda la colección</Link>
               </Button>
             </div>
           ) : (
@@ -297,9 +297,9 @@ export default async function TiendaPage({ searchParams }: PageProps) {
               <em className="text-gold-light">Creamos rincones.</em>
             </h2>
             <p className="mt-5 font-sans text-sm font-light leading-relaxed text-cream/60">
-              Nook nació de observar cómo las personas gravitan hacia esos espacios especiales — el
-              rincón del café, el lugar junto a la ventana, el sillón que combina perfecto con la
-              lámpara nueva. Cada pieza que elegimos cuenta una historia.
+              Nook nació de observar cómo las personas gravitan hacia esos espacios especiales —
+              el rincón del café, el lugar junto a la ventana, el sillón que por fin combina con
+              la lámpara nueva. Cada pieza que elegimos tiene un porqué.
             </p>
             <Link
               href="/nosotros"
@@ -320,7 +320,7 @@ export default async function TiendaPage({ searchParams }: PageProps) {
                 ✦ Explorá
               </p>
               <h2 className="mt-3 font-serif text-[clamp(1.8rem,3vw,2.6rem)] font-light text-espresso">
-                Nuestras categorías
+                ¿Qué querés transformar hoy?
               </h2>
             </div>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -358,7 +358,7 @@ export default async function TiendaPage({ searchParams }: PageProps) {
                 ✦ Testimonios
               </p>
               <h2 className="mt-3 font-serif text-[clamp(1.8rem,3vw,2.6rem)] font-light text-espresso">
-                Lo que dicen nuestras clientas
+                Rincones que ya encontraron su pieza
               </h2>
             </div>
             <div className="grid gap-5 sm:grid-cols-3">

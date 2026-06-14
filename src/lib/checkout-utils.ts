@@ -6,8 +6,8 @@ export const SHIPPING_COSTS: Record<ShippingMethod, number> = {
 };
 
 export const SHIPPING_LABELS: Record<ShippingMethod, { label: string; description: string }> = {
-  standard: { label: "Envío estándar", description: "5-7 días hábiles — Gratis" },
-  express: { label: "Envío express", description: "1-2 días hábiles — $2.500" },
+  standard: { label: "Envío estándar", description: "5–7 días hábiles · Sin costo" },
+  express: { label: "Envío express", description: "1–2 días hábiles · $2.500" },
 };
 
 export function calcShippingCost(method: ShippingMethod): number {

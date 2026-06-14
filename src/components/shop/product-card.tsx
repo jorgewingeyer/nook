@@ -34,7 +34,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
             </span>
           ) : product.isFeatured ? (
             <span className="absolute left-3 top-3 rounded-full bg-gold px-2.5 py-1 font-sans text-[9px] font-semibold uppercase tracking-[0.10em] text-white">
-              Destacado
+              Favorito
             </span>
           ) : null}
         </div>

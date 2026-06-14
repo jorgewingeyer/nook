@@ -34,7 +34,7 @@ export function ShopHeader({ cartCount }: ShopHeaderProps) {
     <header className="fixed inset-x-0 top-0 z-50">
       {/* Trust strip */}
       <div className="bg-espresso py-2 text-center font-sans text-[11px] tracking-[0.09em] text-gold-light">
-        Envío gratis en compras +$50.000&nbsp;&nbsp;·&nbsp;&nbsp;Devoluciones sin costo&nbsp;&nbsp;·&nbsp;&nbsp;Pago 100% seguro
+        Envío gratis en compras desde $50.000&nbsp;&nbsp;·&nbsp;&nbsp;Devoluciones sin costo&nbsp;&nbsp;·&nbsp;&nbsp;Pago 100% seguro y protegido
       </div>
 
       {/* Main nav */}
@@ -82,7 +82,7 @@ export function ShopHeader({ cartCount }: ShopHeaderProps) {
             {/* Cart — pill button */}
             <Link
               href="/carrito"
-              aria-label={`Carrito, ${cartCount} ${cartCount === 1 ? "producto" : "productos"}`}
+              aria-label={`Tu carrito, ${cartCount} ${cartCount === 1 ? "pieza seleccionada" : "piezas seleccionadas"}`}
               className={cn(
                 "relative ml-1 flex items-center gap-2 rounded-full px-4 py-2 font-sans text-[12px] font-medium uppercase tracking-[0.06em] transition-colors duration-200",
                 "bg-espresso text-cream hover:bg-stone-warm",
