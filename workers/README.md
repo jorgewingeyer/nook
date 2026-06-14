@@ -51,6 +51,25 @@ Needs the Workers Paid plan (Durable Objects + Workers AI). Optionally set
 `AI_GATEWAY_ID` (already in its wrangler.jsonc) and create the gateway for
 caching/limits.
 
+## cart-sync (Phase 3 — real-time cart)
+
+`CartRoom` Durable Object (one per hashed cart session) broadcasting `cart_update`
+pings over hibernatable WebSockets so a cart change in one tab/device refreshes
+the others. The Next app POSTs `/room/:id/publish` after each cart mutation; the
+storefront subscribes via `src/components/shop/cart-sync.tsx`. D1 stays the
+source of truth — only change pings travel through the DO.
+
+```bash
+cd workers/cart-sync
+wrangler deploy
+# optional shared secret for /publish:
+# wrangler secret put CART_SYNC_SECRET
+```
+
+Then set on the app: `NEXT_PUBLIC_CART_SYNC_HOST` (client subscribe) and
+`CART_SYNC_HOST` (+ optional `CART_SYNC_SECRET`) for server publish. Needs the
+Workers Paid plan (Durable Objects).
+
 ## Type-checking (optional)
 
 These workers use the workerd runtime (`cloudflare:workers`, queue/workflow

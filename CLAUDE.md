@@ -386,6 +386,14 @@ it (`cd workers/shopping-agent && wrangler deploy`) then set
 `NEXT_PUBLIC_AGENT_HOST` to its `*.workers.dev` host — the storefront's floating
 chat widget activates. Requires Workers Paid (Durable Objects + Workers AI).
 
+### Real-time cart (Phase 3 — Durable Objects)
+
+`workers/cart-sync` hosts `CartRoom`, a Durable Object (one per hashed cart
+session) that broadcasts `cart_update` pings over WebSockets so the cart syncs
+live across tabs/devices. Deploy it, then set `NEXT_PUBLIC_CART_SYNC_HOST`
+(client subscribe) and `CART_SYNC_HOST` / `CART_SYNC_SECRET` (server publish).
+Additive — D1 remains the source of truth; cart works unchanged without it.
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.

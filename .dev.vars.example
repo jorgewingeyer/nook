@@ -17,6 +17,11 @@ MP_WEBHOOK_SECRET=your-mp-webhook-secret-here
 # Turnstile dashboard. If unset, verification is skipped with a warning.
 TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
 
+# Real-time cart (Phase 3): the cart-sync worker host the app POSTs change pings
+# to after a cart mutation, and an optional shared secret for /publish.
+# CART_SYNC_HOST=nook-cart-sync.<account>.workers.dev
+# CART_SYNC_SECRET=your-shared-secret
+
 # Public URL for MercadoPago back_urls and webhooks
 # In production: https://your-domain.com
 NEXT_PUBLIC_APP_URL=https://nook.localhost:1355
