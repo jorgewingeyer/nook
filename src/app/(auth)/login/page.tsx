@@ -5,11 +5,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Turnstile } from "@/components/shared/turnstile";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -19,7 +21,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const result = await loginAction(email, password);
+      const result = await loginAction(email, password, turnstileToken);
 
       if (result.error) {
         setError(result.error);
@@ -78,6 +80,8 @@ export default function LoginPage() {
             {error}
           </div>
         )}
+
+        <Turnstile onToken={setTurnstileToken} />
 
         <Button type="submit" disabled={loading} className="mt-2 w-full">
           {loading ? "Ingresando..." : "Entrar"}

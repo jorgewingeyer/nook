@@ -6,6 +6,17 @@ SESSION_SECRET=a_very_secret_key_for_development_only_at_least_32_chars
 # Use sandbox credentials for development (prefix: TEST-)
 MP_ACCESS_TOKEN=TEST-your-access-token-here
 
+# MercadoPago webhook secret — from the dashboard's Webhooks section.
+# REQUIRED in production: the webhook verifies the x-signature header against
+# this secret and rejects unsigned/forged requests (401). If unset, signature
+# verification is skipped (dev only) and a warning is logged.
+MP_WEBHOOK_SECRET=your-mp-webhook-secret-here
+
+# Cloudflare Turnstile secret key (server-side verification of login/checkout).
+# Dev: the always-pass test secret below. Prod: your real secret from the
+# Turnstile dashboard. If unset, verification is skipped with a warning.
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+
 # Public URL for MercadoPago back_urls and webhooks
 # In production: https://your-domain.com
 NEXT_PUBLIC_APP_URL=https://nook.localhost:1355

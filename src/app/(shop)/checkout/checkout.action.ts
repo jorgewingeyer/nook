@@ -2,12 +2,13 @@
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { and, eq } from "drizzle-orm";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { getDb } from "@/lib/db";
 import { cart, cartItems, inventoryMovements, orderItems, orderStatusHistory, orders, products } from "@/db/schema";
 import { COOKIE_CART } from "@/lib/cart-session";
 import { calcShippingCost, generateOrderNumber, type ShippingMethod } from "@/lib/checkout-utils";
 import { createMpPreference } from "@/lib/mercadopago";
+import { verifyTurnstile } from "@/lib/turnstile";
 import { getCartAction } from "../carrito/cart.action";
 
 export type CheckoutResult =
@@ -21,6 +22,13 @@ export async function createOrderAction(formData: FormData): Promise<CheckoutRes
 
   const { env } = await getCloudflareContext();
   const db = getDb((env as any).DB);
+
+  const turnstileToken = formData.get("cf-turnstile-response") as string | null;
+  const ip = (await headers()).get("cf-connecting-ip");
+  const human = await verifyTurnstile(turnstileToken, (env as any).TURNSTILE_SECRET_KEY, ip);
+  if (!human) {
+    return { error: "Verificación de seguridad fallida. Recargá la página e intentá de nuevo." };
+  }
 
   const cartData = await getCartAction(sessionId);
   if (!cartData.items.length) return { error: "El carrito está vacío" };
@@ -41,6 +49,7 @@ export async function createOrderAction(formData: FormData): Promise<CheckoutRes
   if (!shippingProvince) return { error: "La provincia es requerida" };
   if (!shippingZip) return { error: "El código postal es requerido" };
 
+  const stockByProduct = new Map<number, number>();
   for (const item of cartData.items) {
     const product = await db
       .select({ stock: products.stock })
@@ -50,6 +59,7 @@ export async function createOrderAction(formData: FormData): Promise<CheckoutRes
     if (!product || product.stock < item.quantity) {
       return { error: `Stock insuficiente para "${item.name}"` };
     }
+    stockByProduct.set(item.productId, product.stock);
   }
 
   const shippingCost = calcShippingCost(shippingMethod);
@@ -80,43 +90,54 @@ export async function createOrderAction(formData: FormData): Promise<CheckoutRes
     .returning({ id: orders.id })
     .get();
 
-  await db.insert(orderItems).values(
-    cartData.items.map((item) => ({
+  const writes: any[] = [
+    db.insert(orderItems).values(
+      cartData.items.map((item) => ({
+        orderId: order.id,
+        productId: item.productId,
+        productName: item.name,
+        productSku: item.sku,
+        quantity: item.quantity,
+        unitPrice: item.price,
+        totalPrice: item.subtotal,
+      })),
+    ),
+    db.insert(orderStatusHistory).values({
       orderId: order.id,
-      productId: item.productId,
-      productName: item.name,
-      productSku: item.sku,
-      quantity: item.quantity,
-      unitPrice: item.price,
-      totalPrice: item.subtotal,
-    })),
-  );
-
-  await db.insert(orderStatusHistory).values({
-    orderId: order.id,
-    status: "pending",
-    note: "Pedido creado, esperando pago",
-  });
+      status: "pending",
+      note: "Pedido creado, esperando pago",
+    }),
+  ];
 
   for (const item of cartData.items) {
-    const product = await db
-      .select({ stock: products.stock })
-      .from(products)
-      .where(eq(products.id, item.productId))
-      .get();
-
-    if (product) {
-      const newStock = product.stock - item.quantity;
-      await db.update(products).set({ stock: newStock }).where(eq(products.id, item.productId));
-      await db.insert(inventoryMovements).values({
+    const previousStock = stockByProduct.get(item.productId) ?? 0;
+    const newStock = previousStock - item.quantity;
+    writes.push(
+      db.update(products).set({ stock: newStock }).where(eq(products.id, item.productId)),
+    );
+    writes.push(
+      db.insert(inventoryMovements).values({
         productId: item.productId,
         type: "out",
         quantity: item.quantity,
-        previousStock: product.stock,
+        previousStock,
         newStock,
         reason: `Pedido ${orderNumber}`,
         reference: orderNumber,
-      });
+      }),
+    );
+  }
+
+  await db.batch(writes as [any, ...any[]]);
+
+  // Phase 2b: schedule release of reserved stock if this order is never paid.
+  // Feature-detected — only runs once the workflows worker is provisioned.
+  const expiryWf = (env as any).PENDING_EXPIRY_WORKFLOW;
+  if (expiryWf?.create) {
+    try {
+      await expiryWf.create({ params: { orderId: order.id, orderNumber } });
+    } catch (e) {
+      console.error("[checkout] failed to schedule pending-order expiry", e);
     }
   }
 

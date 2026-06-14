@@ -4,6 +4,7 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { categories, productImages, products } from "@/db/schema";
+import { semanticProductIds } from "@/lib/search";
 
 const PAGE_SIZE = 12;
 
@@ -37,6 +38,37 @@ export type ShopCategory = {
   imageUrl: string | null;
 };
 
+const CATALOG_COLUMNS = {
+  id: products.id,
+  name: products.name,
+  slug: products.slug,
+  price: products.price,
+  description: products.description,
+  stock: products.stock,
+  isFeatured: products.isFeatured,
+  categoryId: products.categoryId,
+  categoryName: categories.name,
+};
+
+type CatalogRow = {
+  id: number;
+  categoryName: string | null;
+} & Record<string, unknown>;
+
+async function attachMainImages(
+  db: ReturnType<typeof getDb>,
+  rows: CatalogRow[],
+): Promise<ShopProduct[]> {
+  const mainImages = rows.length
+    ? await db
+        .select({ productId: productImages.productId, url: productImages.url })
+        .from(productImages)
+        .where(and(inArray(productImages.productId, rows.map((r) => r.id)), eq(productImages.isMain, true)))
+    : [];
+  const imageMap = Object.fromEntries(mainImages.map((img) => [img.productId, img.url]));
+  return rows.map((r) => ({ ...(r as unknown as ShopProduct), mainImage: imageMap[r.id] ?? null }));
+}
+
 export async function getShopCatalogAction(params?: {
   search?: string;
   categorySlug?: string;
@@ -51,8 +83,19 @@ export async function getShopCatalogAction(params?: {
 
   const conditions = [eq(products.status, "active")];
 
+  // Phase 2c: semantic search via Vectorize, falling back to keyword LIKE when
+  // the index is unavailable (e.g. not provisioned / local dev).
+  let semanticOrderIds: number[] | null = null;
   if (params?.search) {
-    conditions.push(sql`${products.name} LIKE ${"%" + params.search + "%"}`);
+    const ids = await semanticProductIds(env as any, params.search);
+    if (ids && ids.length > 0) {
+      conditions.push(inArray(products.id, ids));
+      semanticOrderIds = ids;
+    } else if (ids && ids.length === 0) {
+      return { products: [], total: 0, page, limit: PAGE_SIZE };
+    } else {
+      conditions.push(sql`${products.name} LIKE ${"%" + params.search + "%"}`);
+    }
   }
 
   if (params?.categorySlug) {
@@ -62,6 +105,21 @@ export async function getShopCatalogAction(params?: {
       .where(eq(categories.slug, params.categorySlug))
       .get();
     if (cat) conditions.push(eq(products.categoryId, cat.id));
+    else return { products: [], total: 0, page, limit: PAGE_SIZE };
+  }
+
+  // Relevance-ordered path: semantic matches with no explicit sort. Bounded by
+  // the topK of the vector query, so in-memory sort + pagination is cheap.
+  if (semanticOrderIds && !params?.sortBy) {
+    const rows = await db
+      .select(CATALOG_COLUMNS)
+      .from(products)
+      .leftJoin(categories, eq(products.categoryId, categories.id))
+      .where(and(...conditions));
+    const rank = new Map(semanticOrderIds.map((id, i) => [id, i]));
+    rows.sort((a, b) => (rank.get(a.id) ?? Infinity) - (rank.get(b.id) ?? Infinity));
+    const paged = rows.slice(offset, offset + PAGE_SIZE);
+    return { products: await attachMainImages(db, paged), total: rows.length, page, limit: PAGE_SIZE };
   }
 
   const orderBy = (() => {
@@ -79,17 +137,7 @@ export async function getShopCatalogAction(params?: {
       .from(products)
       .where(and(...conditions)),
     db
-      .select({
-        id: products.id,
-        name: products.name,
-        slug: products.slug,
-        price: products.price,
-        description: products.description,
-        stock: products.stock,
-        isFeatured: products.isFeatured,
-        categoryId: products.categoryId,
-        categoryName: categories.name,
-      })
+      .select(CATALOG_COLUMNS)
       .from(products)
       .leftJoin(categories, eq(products.categoryId, categories.id))
       .where(and(...conditions))
@@ -98,20 +146,8 @@ export async function getShopCatalogAction(params?: {
       .offset(offset),
   ]);
 
-  const mainImages = rows.length
-    ? await db
-        .select({ productId: productImages.productId, url: productImages.url })
-        .from(productImages)
-        .where(and(inArray(productImages.productId, rows.map((r) => r.id)), eq(productImages.isMain, true)))
-    : [];
-
-  const imageMap = Object.fromEntries(mainImages.map((img) => [img.productId, img.url]));
-
   return {
-    products: rows.map((r) => ({
-      ...r,
-      mainImage: imageMap[r.id] ?? null,
-    })),
+    products: await attachMainImages(db, rows),
     total: totalResult[0]?.count ?? 0,
     page,
     limit: PAGE_SIZE,

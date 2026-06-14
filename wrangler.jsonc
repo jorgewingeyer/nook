@@ -42,7 +42,33 @@
       "preview_bucket_name": "nook-assets-preview"
     }
   ],
+  // Phase 2a — Queues: webhook enqueues payment notifications; the standalone
+  // consumer in workers/payments-consumer processes them with retries + DLQ.
+  // Provision: `wrangler queues create nook-payments` and `... nook-payments-dlq`
+  "queues": {
+    "producers": [
+      {
+        "binding": "QUEUE_PAYMENTS",
+        "queue": "nook-payments"
+      }
+    ]
+  },
+  // ── Phase 2c/2d bindings (add when provisioning; they require a Cloudflare
+  // account and force a remote proxy in `next dev`, so they live here as docs
+  // rather than active config). See CLAUDE.md › "Cloudflare Phase 2 setup".
+  //
+  // "ai": { "binding": "AI" },
+  // "vectorize": [{ "binding": "VECTORIZE", "index_name": "nook-products" }],
+  //
+  // ── Phase 2b Workflows (defined in workers/order-workflow, referenced here):
+  // "workflows": [
+  //   { "binding": "ORDER_WORKFLOW", "name": "order-workflow",
+  //     "class_name": "OrderWorkflow", "script_name": "nook-workflows" },
+  //   { "binding": "PENDING_EXPIRY_WORKFLOW", "name": "pending-expiry-workflow",
+  //     "class_name": "PendingOrderExpiryWorkflow", "script_name": "nook-workflows" }
+  // ],
   "vars": {
-    "NEXT_PUBLIC_CDN_URL": "https://assets.nook.local"
+    "NEXT_PUBLIC_CDN_URL": "https://assets.nook.local",
+    "AI_GATEWAY_ID": "nook-gateway"
   }
 }

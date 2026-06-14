@@ -314,6 +314,55 @@ npx tsc --noEmit
 4. Add shadcn/ui components or custom components in `src/components/` as needed
 5. Test locally with `pnpm dev` before committing
 
+## Cloudflare Phase 2 setup (Queues, Workflows, AI, Vectorize)
+
+Phase 2 features are coded and feature-detected: the app runs without them and
+they activate once the bindings are provisioned. Requires the Workers Paid plan.
+Assume `wrangler login` and that `database_id` (in `wrangler.jsonc` and the
+worker configs under `workers/`) points to the real D1 database.
+
+### Queues (Phase 2a — webhook decoupling)
+
+```bash
+wrangler queues create nook-payments
+wrangler queues create nook-payments-dlq
+# QUEUE_PAYMENTS producer is already in wrangler.jsonc. Deploy the consumer:
+cd workers/payments-consumer && wrangler secret put MP_ACCESS_TOKEN && wrangler deploy
+```
+
+Until the queue exists the webhook processes inline (Phase 0 behavior).
+
+### Workflows (Phase 2b — order pipeline + pending-order expiry)
+
+```bash
+cd workers/order-workflow && wrangler secret put MP_ACCESS_TOKEN && wrangler deploy
+```
+
+Then uncomment the `workflows` block in `wrangler.jsonc` and redeploy the app.
+Checkout schedules `PENDING_EXPIRY_WORKFLOW` to release reserved stock for
+orders left unpaid.
+
+### Workers AI + AI Gateway (Phase 2d — admin content generation)
+
+1. Create an AI Gateway named `nook-gateway` (or change `AI_GATEWAY_ID`).
+2. Uncomment `"ai": { "binding": "AI" }` in `wrangler.jsonc`.
+
+The product form's "Generar con IA" buttons (description/tags) then work.
+
+### Vectorize + AI Search (Phase 2c — semantic catalog search)
+
+```bash
+wrangler vectorize create nook-products --dimensions=1024 --metric=cosine
+```
+
+Uncomment the `vectorize` block in `wrangler.jsonc`. Embeddings use
+`@cf/baai/bge-m3` (multilingual, 1024-dim); products are indexed on
+create/update and catalog search falls back to SQL `LIKE` when the index is
+absent. Backfill existing products by re-saving them.
+
+> Note: the `ai`/`vectorize` bindings force a remote proxy in `next dev` (needs
+> auth), so they ship commented-out — enable them for `pnpm preview`/deploy.
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.

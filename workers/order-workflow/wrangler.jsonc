@@ -1,0 +1,26 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "nook-workflows",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-09-27",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "nook",
+      "database_id": "YOUR_D1_DATABASE_ID_HERE"
+    }
+  ],
+  "workflows": [
+    {
+      "binding": "ORDER_WORKFLOW",
+      "name": "order-workflow",
+      "class_name": "OrderWorkflow"
+    },
+    {
+      "binding": "PENDING_EXPIRY_WORKFLOW",
+      "name": "pending-expiry-workflow",
+      "class_name": "PendingOrderExpiryWorkflow"
+    }
+  ]
+}
