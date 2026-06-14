@@ -1,0 +1,31 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "nook-payments-consumer",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-09-27",
+  "compatibility_flags": ["nodejs_compat"],
+  // Same D1 database as the Next app — set database_id to the real id.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "nook",
+      "database_id": "YOUR_D1_DATABASE_ID_HERE"
+    }
+  ],
+  "queues": {
+    "consumers": [
+      {
+        "queue": "nook-payments",
+        "max_batch_size": 10,
+        "max_batch_timeout": 5,
+        "max_retries": 5,
+        "dead_letter_queue": "nook-payments-dlq"
+      }
+    ]
+  }
+  // Optional — delegate to the durable workflow instead of inline processing:
+  // "workflows": [
+  //   { "binding": "ORDER_WORKFLOW", "name": "order-workflow",
+  //     "class_name": "OrderWorkflow", "script_name": "nook-workflows" }
+  // ]
+}

@@ -130,6 +130,17 @@ export async function createOrderAction(formData: FormData): Promise<CheckoutRes
 
   await db.batch(writes as [any, ...any[]]);
 
+  // Phase 2b: schedule release of reserved stock if this order is never paid.
+  // Feature-detected — only runs once the workflows worker is provisioned.
+  const expiryWf = (env as any).PENDING_EXPIRY_WORKFLOW;
+  if (expiryWf?.create) {
+    try {
+      await expiryWf.create({ params: { orderId: order.id, orderNumber } });
+    } catch (e) {
+      console.error("[checkout] failed to schedule pending-order expiry", e);
+    }
+  }
+
   const mpToken = (env as any).MP_ACCESS_TOKEN as string | undefined;
   const appUrl = (process.env.NEXT_PUBLIC_APP_URL as string | undefined) ?? "https://nook.localhost:1355";
 

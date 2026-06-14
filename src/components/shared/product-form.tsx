@@ -1,7 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Loader2, Plus, X } from "lucide-react";
+import { useState } from "react";
+import { Loader2, Plus, Sparkles, X } from "lucide-react";
+import { toast } from "sonner";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,7 +27,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useProductForm } from "@/hooks/use-product-form";
-import { type ProductDetail, type ProductStatus } from "@/app/(secure)/admin/products/products.action";
+import {
+  generateProductContentAction,
+  type ProductDetail,
+  type ProductStatus,
+} from "@/app/(secure)/admin/products/products.action";
 
 type Category = { id: number; name: string };
 
@@ -39,6 +45,42 @@ interface ProductFormProps {
 export function ProductForm({ product, categories, action, mode }: ProductFormProps) {
   const router = useRouter();
   const form = useProductForm({ product, categories, action, mode });
+  const [generating, setGenerating] = useState<"description" | "tags" | null>(null);
+
+  async function handleGenerate(kind: "description" | "tags") {
+    if (!form.name.trim()) {
+      toast.error("Ingresá el nombre del producto primero");
+      return;
+    }
+    setGenerating(kind);
+    try {
+      const categoryName = form.catList.find((c) => c.id.toString() === form.categoryId)?.name ?? null;
+      const attributes =
+        form.color || form.material
+          ? JSON.stringify({ color: form.color || null, material: form.material || null })
+          : null;
+      const res = await generateProductContentAction(kind, {
+        name: form.name,
+        category: categoryName,
+        attributes,
+      });
+      if (res.error) {
+        toast.error(res.error);
+        return;
+      }
+      if (kind === "description" && res.description) {
+        form.setDescription(res.description);
+        toast.success("Descripción generada");
+      } else if (kind === "tags" && res.tags) {
+        form.setTags(res.tags.join(", "));
+        toast.success("Etiquetas generadas");
+      }
+    } catch {
+      toast.error("No se pudo generar el contenido");
+    } finally {
+      setGenerating(null);
+    }
+  }
 
   return (
     <form onSubmit={form.handleSubmit} className="space-y-8">
@@ -86,7 +128,24 @@ export function ProductForm({ product, categories, action, mode }: ProductFormPr
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Descripción</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="description">Descripción</Label>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0 text-xs"
+                  onClick={() => handleGenerate("description")}
+                  disabled={generating !== null}
+                >
+                  {generating === "description" ? (
+                    <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                  ) : (
+                    <Sparkles className="mr-1 h-3 w-3" />
+                  )}
+                  Generar con IA
+                </Button>
+              </div>
               <Textarea
                 id="description"
                 value={form.description}
@@ -153,7 +212,24 @@ export function ProductForm({ product, categories, action, mode }: ProductFormPr
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="tags">Etiquetas (separadas por coma)</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="tags">Etiquetas (separadas por coma)</Label>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0 text-xs"
+                  onClick={() => handleGenerate("tags")}
+                  disabled={generating !== null}
+                >
+                  {generating === "tags" ? (
+                    <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                  ) : (
+                    <Sparkles className="mr-1 h-3 w-3" />
+                  )}
+                  Generar con IA
+                </Button>
+              </div>
               <Input
                 id="tags"
                 value={form.tags}

@@ -14,6 +14,8 @@ import {
 } from "@/db/schema";
 import { verifySession } from "@/lib/session";
 import { slugify } from "@/lib/utils";
+import { indexProduct, removeProductFromIndex } from "@/lib/search";
+import { generateProductDescription, generateProductTags } from "@/lib/ai";
 
 export type ProductStatus = "active" | "inactive" | "archived" | "draft";
 
@@ -262,6 +264,16 @@ export async function createProductAction(
       newValue: JSON.stringify({ name, sku }),
     });
 
+    // Phase 2c: index for semantic search (no-op until Vectorize provisioned).
+    await indexProduct(env as any, {
+      id: product.id,
+      name,
+      slug: rest.slug,
+      description: rest.description,
+      tags: rest.tags,
+      status: rest.status,
+    });
+
     return { data: { id: product.id } };
   } catch (error) {
     const msg = error instanceof Error ? error.message : "";
@@ -345,6 +357,16 @@ export async function updateProductAction(
       newValue: JSON.stringify({ name, sku, price }),
     });
 
+    // Phase 2c: re-index for semantic search (no-op until Vectorize provisioned).
+    await indexProduct(env as any, {
+      id,
+      name,
+      slug: rest.slug,
+      description: rest.description,
+      tags: rest.tags,
+      status: rest.status,
+    });
+
     return {};
   } catch (error) {
     const msg = error instanceof Error ? error.message : "";
@@ -353,6 +375,28 @@ export async function updateProductAction(
     console.error("updateProductAction error:", error);
     return { error: "Error al actualizar el producto" };
   }
+}
+
+export async function generateProductContentAction(
+  kind: "description" | "tags",
+  input: { name: string; category?: string | null; attributes?: string | null },
+): Promise<{ error?: string; description?: string; tags?: string[] }> {
+  const session = await verifySession();
+  if (!session) return { error: "No autenticado" };
+  if (!input.name?.trim()) return { error: "Ingresá el nombre del producto primero" };
+
+  const { env } = await getCloudflareContext();
+  if (!(env as any).AI) {
+    return { error: "La generación con IA no está disponible (Workers AI no configurado)" };
+  }
+
+  if (kind === "description") {
+    const description = await generateProductDescription(env as any, input);
+    return description ? { description } : { error: "No se pudo generar la descripción" };
+  }
+
+  const tags = await generateProductTags(env as any, input);
+  return tags ? { tags } : { error: "No se pudieron generar las etiquetas" };
 }
 
 export async function archiveProductAction(id: number): Promise<{ error?: string }> {
@@ -382,6 +426,9 @@ export async function archiveProductAction(id: number): Promise<{ error?: string
     entityId: id,
     newValue: JSON.stringify({ status: newStatus }),
   });
+
+  // Phase 2c: archived/inactive products are removed from the search index.
+  await removeProductFromIndex(env as any, id);
 
   return {};
 }
