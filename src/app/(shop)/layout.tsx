@@ -4,6 +4,10 @@ import { ShopHeader } from "@/components/shop/shop-header";
 import { NookLogo } from "@/components/shop/nook-logo";
 import { NewsletterForm } from "@/components/shop/newsletter-form";
 import { ShoppingAssistant } from "@/components/shop/shopping-assistant";
+import { CartSync } from "@/components/shop/cart-sync";
+import { cookies } from "next/headers";
+import { COOKIE_CART } from "@/lib/cart-session";
+import { cartRoomId } from "@/lib/cart-sync";
 import { getCartCountAction } from "./carrito/cart.action";
 
 const FOOTER_COLS = [
@@ -40,12 +44,15 @@ const FOOTER_COLS = [
 
 export default async function ShopLayout({ children }: { children: React.ReactNode }) {
   const cartCount = await getCartCountAction();
+  const cartSessionId = (await cookies()).get(COOKIE_CART)?.value;
+  const cartRoom = cartSessionId ? await cartRoomId(cartSessionId) : null;
 
   return (
     <div className="flex min-h-screen flex-col">
       <ShopHeader cartCount={cartCount} />
       <main className="flex-1">{children}</main>
       <ShoppingAssistant />
+      <CartSync roomId={cartRoom} />
 
 
       <footer className="bg-espresso font-sans text-cream">

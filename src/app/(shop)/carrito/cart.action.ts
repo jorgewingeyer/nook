@@ -12,6 +12,7 @@ import {
   generateCartSessionId,
 } from "@/lib/cart-session";
 import { trackEvent } from "@/lib/analytics";
+import { publishCartUpdate } from "@/lib/cart-sync";
 
 export type CartItem = {
   id: number;
@@ -163,6 +164,7 @@ export async function addToCartAction(
   }
 
   trackEvent(env, "add_to_cart", { productId, quantity, sessionId });
+  await publishCartUpdate(env, sessionId);
 
   return { sessionId };
 }
@@ -181,6 +183,8 @@ export async function removeFromCartAction(productId: number): Promise<{ error?:
   await db
     .delete(cartItems)
     .where(and(eq(cartItems.cartId, cartRow.id), eq(cartItems.productId, productId)));
+
+  await publishCartUpdate(env, sessionId);
 
   return {};
 }
@@ -213,6 +217,8 @@ export async function updateCartQuantityAction(
     .update(cartItems)
     .set({ quantity })
     .where(and(eq(cartItems.cartId, cartRow.id), eq(cartItems.productId, productId)));
+
+  await publishCartUpdate(env, sessionId);
 
   return {};
 }
