@@ -11,6 +11,7 @@ import {
   cartCookieOptions,
   generateCartSessionId,
 } from "@/lib/cart-session";
+import { trackEvent } from "@/lib/analytics";
 
 export type CartItem = {
   id: number;
@@ -160,6 +161,8 @@ export async function addToCartAction(
   } else {
     await db.insert(cartItems).values({ cartId: cartRow.id, productId, quantity });
   }
+
+  trackEvent(env, "add_to_cart", { productId, quantity, sessionId });
 
   return { sessionId };
 }

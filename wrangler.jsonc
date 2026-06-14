@@ -42,6 +42,14 @@
       "preview_bucket_name": "nook-assets-preview"
     }
   ],
+  // Phase 3 — Workers Analytics Engine: high-cardinality storefront events
+  // (product views, add-to-cart, orders). Write-only; queryable via SQL/GraphQL.
+  "analytics_engine_datasets": [
+    {
+      "binding": "ANALYTICS",
+      "dataset": "nook_events"
+    }
+  ],
   // Phase 2a — Queues: webhook enqueues payment notifications; the standalone
   // consumer in workers/payments-consumer processes them with retries + DLQ.
   // Provision: `wrangler queues create nook-payments` and `... nook-payments-dlq`

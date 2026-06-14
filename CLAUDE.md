@@ -363,6 +363,21 @@ absent. Backfill existing products by re-saving them.
 > Note: the `ai`/`vectorize` bindings force a remote proxy in `next dev` (needs
 > auth), so they ship commented-out — enable them for `pnpm preview`/deploy.
 
+### Analytics Engine (Phase 3 — storefront analytics)
+
+The `ANALYTICS` binding (dataset `nook_events`) is live in `wrangler.jsonc` and
+safe in `next dev` (writes are a local no-op). No provisioning command needed —
+the dataset is created on first write once deployed on the Workers Paid plan.
+`trackEvent()` ([src/lib/analytics.ts](src/lib/analytics.ts)) records
+`product_view`, `add_to_cart`, `search`, and `order_created` events. Query via
+the GraphQL/SQL API, e.g.:
+
+```sql
+SELECT blob1 AS event, blob2 AS slug, count() AS n
+FROM nook_events WHERE timestamp > NOW() - INTERVAL '7' DAY
+GROUP BY event, slug ORDER BY n DESC
+```
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
