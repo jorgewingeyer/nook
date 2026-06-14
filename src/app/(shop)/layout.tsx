@@ -3,6 +3,7 @@ import { Truck, ShieldCheck, RefreshCw, Instagram, Facebook } from "lucide-react
 import { ShopHeader } from "@/components/shop/shop-header";
 import { NookLogo } from "@/components/shop/nook-logo";
 import { NewsletterForm } from "@/components/shop/newsletter-form";
+import { ShoppingAssistant } from "@/components/shop/shopping-assistant";
 import { getCartCountAction } from "./carrito/cart.action";
 
 const FOOTER_COLS = [
@@ -44,6 +45,8 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
     <div className="flex min-h-screen flex-col">
       <ShopHeader cartCount={cartCount} />
       <main className="flex-1">{children}</main>
+      <ShoppingAssistant />
+
 
       <footer className="bg-espresso font-sans text-cream">
         {/* Trust signals strip */}

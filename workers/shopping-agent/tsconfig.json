@@ -1,0 +1,9 @@
+{
+  "extends": "agents/tsconfig",
+  "compilerOptions": {
+    "noEmit": true,
+    "skipLibCheck": true,
+    "moduleResolution": "bundler"
+  },
+  "include": ["src/**/*.ts", "../../src/lib/db.ts", "../../src/db/schema.ts"]
+}

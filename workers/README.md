@@ -33,6 +33,24 @@ wrangler secret put MP_ACCESS_TOKEN
 wrangler deploy
 ```
 
+## shopping-agent (Phase 3 — Agents SDK)
+
+A stateful AI shopping assistant: `ShoppingAgent` (a Durable Object with embedded
+SQLite) answers catalog questions using Workers AI + tools over D1. The storefront
+chat widget (`src/components/shop/shopping-assistant.tsx`) connects via
+`agents/react` when `NEXT_PUBLIC_AGENT_HOST` is set.
+
+```bash
+cd workers/shopping-agent
+wrangler deploy
+# then point the app at it:
+#   NEXT_PUBLIC_AGENT_HOST=nook-shopping-agent.<account>.workers.dev
+```
+
+Needs the Workers Paid plan (Durable Objects + Workers AI). Optionally set
+`AI_GATEWAY_ID` (already in its wrangler.jsonc) and create the gateway for
+caching/limits.
+
 ## Type-checking (optional)
 
 These workers use the workerd runtime (`cloudflare:workers`, queue/workflow
