@@ -9,6 +9,7 @@ import { COOKIE_CART } from "@/lib/cart-session";
 import { calcShippingCost, generateOrderNumber, type ShippingMethod } from "@/lib/checkout-utils";
 import { createMpPreference } from "@/lib/mercadopago";
 import { verifyTurnstile } from "@/lib/turnstile";
+import { trackEvent } from "@/lib/analytics";
 import { getCartAction } from "../carrito/cart.action";
 
 export type CheckoutResult =
@@ -129,6 +130,8 @@ export async function createOrderAction(formData: FormData): Promise<CheckoutRes
   }
 
   await db.batch(writes as [any, ...any[]]);
+
+  trackEvent(env, "order_created", { slug: orderNumber, value: total });
 
   // Phase 2b: schedule release of reserved stock if this order is never paid.
   // Feature-detected — only runs once the workflows worker is provisioned.

@@ -5,6 +5,7 @@ import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { categories, productImages, products } from "@/db/schema";
 import { semanticProductIds } from "@/lib/search";
+import { trackEvent } from "@/lib/analytics";
 
 const PAGE_SIZE = 12;
 
@@ -87,6 +88,7 @@ export async function getShopCatalogAction(params?: {
   // the index is unavailable (e.g. not provisioned / local dev).
   let semanticOrderIds: number[] | null = null;
   if (params?.search) {
+    trackEvent(env, "search", { query: params.search });
     const ids = await semanticProductIds(env as any, params.search);
     if (ids && ids.length > 0) {
       conditions.push(inArray(products.id, ids));
@@ -213,6 +215,8 @@ export async function getShopProductAction(slug: string): Promise<ShopProductDet
     .get();
 
   if (!row) return null;
+
+  trackEvent(env, "product_view", { slug: row.slug, productId: row.id });
 
   const [images, related] = await Promise.all([
     db
